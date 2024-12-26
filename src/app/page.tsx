@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import NaverMap from '../components/NaverMap';
+import dynamic from 'next/dynamic';
 import SearchModal from '../components/SearchModal';
+
+const NaverMap = dynamic(() => import('../components/NaverMap'), { ssr: false });
 
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
