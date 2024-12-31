@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SignupFormData, FormSchema } from '../schemas/FormSchema';
 import FormInput from '@/components/form/FormInput';
 import FormButton from '@/components/form/FormButton';
-const BASEURL = process.env.NEXT_PUBLIC_BASEURL;
+const BASEURL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const LocalSignUpPage = () => {
   const router = useRouter();
