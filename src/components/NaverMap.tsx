@@ -4,16 +4,14 @@ import { useEffect, useRef } from 'react';
 
 declare global {
   interface Window {
-    naver: any;
+    naver: typeof naver;
   }
 }
 
 interface NaverMapProps {
-  topSearchInput: boolean;
-  searchQuery: string;
-  handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  width?: string;
-  height?: string;
+  topSearchInput?: boolean;
+  searchQuery?: string;
+  handleSearchChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   initialCenter?: { lat: number; lng: number };
   initialZoom?: number;
 }
@@ -22,8 +20,6 @@ const NaverMap = ({
   topSearchInput,
   searchQuery,
   handleSearchChange,
-  width = '100%',
-  height = '700px',
   initialCenter = { lat: 37.5656, lng: 126.9769 },
   initialZoom = 13,
 }: NaverMapProps) => {
@@ -34,7 +30,7 @@ const NaverMap = ({
     if (typeof window === 'undefined' || !mapRef.current) return;
 
     const initializeMap = () => {
-      if (!window.naver) return;
+      if (!window.naver || !mapRef.current) return;
 
       const mapOptions = {
         center: new window.naver.maps.LatLng(initialCenter.lat, initialCenter.lng),
@@ -54,15 +50,20 @@ const NaverMap = ({
       });
     };
 
-    const script = document.createElement('script');
-    script.src = `https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID}`;
-    script.async = true;
-    script.onload = initializeMap;
-    document.head.appendChild(script);
+    const existingScript = document.querySelector('script[src*="maps.js"]');
+    if (!existingScript) {
+      const script = document.createElement('script');
+      script.src = `https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID}`;
+      script.async = true;
+      script.onload = initializeMap;
+      document.head.appendChild(script);
 
-    return () => {
-      document.head.removeChild(script);
-    };
+      return () => {
+        document.head.removeChild(script);
+      };
+    } else {
+      initializeMap;
+    }
   }, [initialCenter, initialZoom]);
 
   return (
@@ -78,7 +79,7 @@ const NaverMap = ({
           />
         </div>
       )}
-      <div ref={mapRef} style={{ width, height }}></div>
+      <div ref={mapRef} className="w-full h-[700px]"></div>
     </div>
   );
 };

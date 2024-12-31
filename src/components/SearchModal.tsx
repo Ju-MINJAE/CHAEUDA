@@ -6,9 +6,10 @@ import { createPortal } from 'react-dom';
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
+  handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
+const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, handleSearchChange }) => {
   const [mounted, setMounted] = useState<boolean>(false);
 
   useEffect(() => {
@@ -27,10 +28,11 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
   if (!mounted || !isOpen) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
+    <div className="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-30">
       <div className="relative w-4/5 max-w-xl p-4">
         <input
           type="text"
+          onChange={handleSearchChange}
           placeholder="찾으시는 지역명을 검색하세요. (예: 시/도, 구/군)"
           className="w-full h-[60px] border-2 border-black p-5 focus:outline-none inset-x-0 focus:ring-2 focus:ring-blue-500"
         />
