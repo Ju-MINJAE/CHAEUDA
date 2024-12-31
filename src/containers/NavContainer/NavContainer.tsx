@@ -48,6 +48,14 @@ const NavContainer: React.FC = () => {
     }
   };
 
+  const handleCreateClick = () => {
+    if (isAuthenticated) {
+      router.push('/create');
+    } else {
+      router.push('/auth/signIn');
+    }
+  };
+
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
@@ -58,7 +66,7 @@ const NavContainer: React.FC = () => {
 
   return (
     <>
-      <header className="fixed w-full bg-white z-40 shadow-md">
+      <header className="fixed w-full bg-white z-40">
         <nav className="flex items-center justify-between h-[80px] md:px-10 px-8">
           <div className="mr-10 text-kick text-2xl font-bold">
             <Link href="/" onClick={closeModal}>
@@ -77,9 +85,7 @@ const NavContainer: React.FC = () => {
               </Link>
             </li>
             <li className="hover:text-kick">
-              <Link href="/create" onClick={closeModal}>
-                매물 올리기
-              </Link>
+              <button onClick={handleCreateClick}>매물 올리기</button>
             </li>
           </ul>
 

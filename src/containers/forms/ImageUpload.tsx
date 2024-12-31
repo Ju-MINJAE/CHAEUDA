@@ -20,7 +20,7 @@ const ImageUploadForm = () => {
           reader.readAsDataURL(file);
           imgCount++;
           if (imgCount > 15) {
-            setErrorMessage('사진은 최대 15장까지 등록 가능합니다.');
+            setErrorMessage('사진은 최대 10장까지 등록 가능합니다.');
             return;
           }
         } else if (file.type.startsWith('video/')) {
@@ -40,6 +40,10 @@ const ImageUploadForm = () => {
         setErrorMessage('');
       }
     }
+  };
+
+  const handleDelete = (index: number) => {
+    setPreviews(prev => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -82,7 +86,7 @@ const ImageUploadForm = () => {
           </label>
           <div className="grid grid-cols-3 gap-4">
             {previews.map((preview, index) => (
-              <div key={index} className="w-full">
+              <div key={index} className="w-full relative">
                 {typeof preview === 'string' ? (
                   preview.startsWith('data:image/') ? (
                     <img src={preview} alt={`Preview ${index}`} className="h-[140px]" />
@@ -92,6 +96,12 @@ const ImageUploadForm = () => {
                     </video>
                   )
                 ) : null}
+                <button
+                  onClick={() => handleDelete(index)}
+                  className="absolute top-1 right-1 bg-gray-100 bg-opacity-60 text-xs px-1"
+                >
+                  ✖
+                </button>
               </div>
             ))}
           </div>
