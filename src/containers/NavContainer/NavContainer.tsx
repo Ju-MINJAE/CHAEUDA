@@ -5,8 +5,6 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useAuthStore from '@/stores/authStore';
 import { Menu, X } from 'lucide-react';
-import { sendLogoutRequest } from '@/api/auth';
-import { clearAuthCookies } from '@/utils/cookieUtils';
 
 const NavContainer: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,16 +22,15 @@ const NavContainer: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      const { token, logout } = useAuthStore.getState();
-      if (token?.refresh) {
-        const response = await sendLogoutRequest(token.refresh);
-        if (response.success) {
-          logout();
-          clearAuthCookies();
-          router.push('/');
-        } else {
-          console.error('로그아웃 요청 실패:', response.message);
-        }
+      const { logout } = useAuthStore.getState();
+      const response = await fetch(`${process.env.NEXT_PUBLIC_DEV_API_URL}/auth/logout/api`);
+
+      if (response.ok) {
+        logout();
+        router.push('/');
+        console.log('로그아웃 성공');
+      } else {
+        console.error('로그아웃 요청 실패:');
       }
     } catch (error) {
       console.error('로그아웃 요청 오류:', error);

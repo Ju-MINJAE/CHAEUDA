@@ -35,10 +35,7 @@ const NaverMap = ({
       const mapOptions = {
         center: new window.naver.maps.LatLng(initialCenter.lat, initialCenter.lng),
         zoom: initialZoom,
-        zoomControl: true,
-        zoomControlOptions: {
-          position: window.naver.maps.Position.TOP_RIGHT,
-        },
+        zoomControl: false,
       };
 
       const map = new window.naver.maps.Map(mapRef.current, mapOptions);
@@ -62,7 +59,7 @@ const NaverMap = ({
         document.head.removeChild(script);
       };
     } else {
-      initializeMap;
+      initializeMap();
     }
   }, [initialCenter, initialZoom]);
 

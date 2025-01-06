@@ -22,10 +22,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="kr" className={`${pretendard.variable}`}>
-      <body className={`${pretendard.className}`}>
+    <html lang="ko" className={`${pretendard.variable}`}>
+      <body className={`${pretendard.className} flex flex-col min-h-screen`}>
         <NavContainer />
-        <main className="pt-[80px]">{children}</main>
+        <main className="flex-1 pt-[80px]">{children}</main>
         <Footer />
       </body>
     </html>

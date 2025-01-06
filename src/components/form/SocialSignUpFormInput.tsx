@@ -1,26 +1,29 @@
 import React from 'react';
-import { UseFormRegister, FieldErrors  } from 'react-hook-form';
-import { SignupFormData } from '@/app/auth/schemas/FormSchema';
+import { UseFormRegister } from 'react-hook-form';
+import { SocialSignupFormData } from '@/app/auth/schemas/SocialSignInSchema';
 
 interface InputFieldProps {
   label: string;
   id: string;
   type: string;
-  register: UseFormRegister<SignupFormData>;
-  name: keyof SignupFormData;
+  defaultValue?: string;
+  register: UseFormRegister<SocialSignupFormData>;
+  name: keyof SocialSignupFormData;
   errorMessage?: string;
-  errors?: FieldErrors<SignupFormData>;
   disabled?: boolean;
+  placeholder: string | undefined;
 }
 
 const Input = ({ 
   label, 
   id, 
   type, 
+  defaultValue,
   register, 
   name,
   errorMessage,
-  disabled 
+  disabled,
+  placeholder
 }: InputFieldProps) => {
   return (
     <div className='flex flex-col space-y-1.5'>
@@ -28,9 +31,11 @@ const Input = ({
       <input
         id={id}
         type={type}
+        defaultValue={defaultValue}
         {...register(name)}
-        className="border border-gray-400 w-full h-9 text-4 cursor-pointer p-2"
+        className="border border-gray-400 w-full h-9 text-4 p-2"
         disabled={disabled}
+        placeholder={placeholder}
       />
       {errorMessage && <p className="text-kick text-sm">{errorMessage}</p>}
     </div>

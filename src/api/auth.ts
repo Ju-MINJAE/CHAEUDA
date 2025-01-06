@@ -8,12 +8,18 @@ export const sendLoginRequest = async (email: string, password: string): Promise
       body: JSON.stringify({ email, password }),
     });
 
+    
     if (!response.ok) {
-      throw new Error('API 요청 실패');
+      const errorData = await response.json();
+      return {
+        success: false,
+        message: `${errorData.message}`,
+      };
     }
-
+    
     const data: LoginResponse = await response.json();
     return data;
+
   } catch (error) {
     console.error('로그인 요청 오류:', error);
     return {
@@ -27,7 +33,6 @@ export const sendRefreshTokenRequest = async (refresh: string): Promise<RefreshR
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/refresh`, {
       method: 'POST',
-      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refresh }),
     });
@@ -51,7 +56,6 @@ export const sendLogoutRequest = async (refresh: string): Promise<LogoutResponse
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/logout`, {
       method: 'POST',
-      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refresh_token: refresh }),
     });

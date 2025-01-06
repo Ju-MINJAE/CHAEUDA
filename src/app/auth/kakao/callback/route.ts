@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     }
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/google/callback/dev?code=${code}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/kakao/callback/dev?code=${code}`,
       {
         method: 'GET',
         headers: {
@@ -29,6 +29,7 @@ export async function GET(req: NextRequest) {
     }
 
     const data = await response.json();
+    console.log('정보 확인', data);
 
     if (data.success) {
       const redirectUrl = data.user.is_active

@@ -5,6 +5,7 @@ interface FormButtonProps {
 }
 
 const FormButton = ({ children }: FormButtonProps) => {
+
   return (
     <>
       <button type="submit" className="bg-kick w-full h-10 text-4 text-white">
