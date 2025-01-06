@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const DEV_API_URL = process.env.NEXT_PUBLIC_DEV_API_URL;
+const DEV_API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const dynamic = 'force-dynamic';
 
@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
         httpOnly: false,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
-        maxAge: 10
+        maxAge: 10,
       });
 
       return responseObj;

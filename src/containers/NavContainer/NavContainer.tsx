@@ -20,7 +20,7 @@ const NavContainer: React.FC = () => {
   const handleLogout = async () => {
     try {
       const { logout } = useAuthStore.getState();
-      const response = await fetch(`${process.env.NEXT_PUBLIC_DEV_API_URL}/auth/logout/api`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/logout/api`);
 
       if (response.ok) {
         logout();
