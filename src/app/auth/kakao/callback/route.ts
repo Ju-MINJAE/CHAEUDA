@@ -29,7 +29,6 @@ export async function GET(req: NextRequest) {
     }
 
     const data = await response.json();
-    console.log('정보 확인', data);
 
     if (data.success) {
       const redirectUrl = data.user.is_active
@@ -57,7 +56,7 @@ export async function GET(req: NextRequest) {
         httpOnly: false,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
-        maxAge: 10
+        maxAge: 10,
       });
 
       return responseObj;

@@ -50,13 +50,12 @@ const Home = () => {
 
     if (userInfo) {
       const decodedUserInfo = JSON.parse(decodeURIComponent(userInfo));
-      
+
       if (decodedUserInfo.is_active === false) {
         return;
       }
       socialLogin(decodedUserInfo);
-      console.log(decodedUserInfo);
-    } 
+    }
   }, []);
 
   return (

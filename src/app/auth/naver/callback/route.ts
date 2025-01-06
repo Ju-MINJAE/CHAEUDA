@@ -36,7 +36,6 @@ export async function GET(req: NextRequest) {
         : `${DEV_API_URL}/auth/signUp/social`;
 
       const responseObj = NextResponse.redirect(redirectUrl);
-console.log(data);
       // 쿠키에 토큰 저장
       responseObj.cookies.set('accessToken', data.tokens.access, {
         httpOnly: true,
@@ -56,7 +55,7 @@ console.log(data);
         httpOnly: false,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
-        maxAge: 10
+        maxAge: 10,
       });
 
       return responseObj;
