@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
         httpOnly: false,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
-        maxAge: 60 * 60 * 24 * 7, // 7일
+        maxAge: 10
       });
 
       return responseObj;

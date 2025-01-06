@@ -9,6 +9,8 @@ import FormInput from '@/components/form/SocialSignUpFormInput';
 import FormButton from '@/components/form/FormButton';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const DEV_API_URL = process.env.NEXT_PUBLIC_DEV_API_URL;
+import { NextResponse } from 'next/server';
+import { clearAuthCookies } from '@/utils/cookieUtils';
 
 const SocialSignUpPage = () => {
   const router = useRouter();

@@ -10,7 +10,6 @@ export async function GET(req: NextRequest) {
       const res = NextResponse.json({ success: true, message: '로그아웃 성공' });
       res.cookies.delete('accessToken');
       res.cookies.delete('refreshToken');
-      res.cookies.delete('user');
       return res;
     } else {
       console.error('로그아웃 요청 실패:', response.message);

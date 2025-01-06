@@ -8,16 +8,13 @@ import { Menu, X } from 'lucide-react';
 
 const NavContainer: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const {socialUser} = useAuthStore()
 
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
 
   const handleChatClick = () => {
-    if (isAuthenticated) {
-      router.push('/chat');
-    } else {
-      router.push('/auth/signIn');
-    }
+    router.push('/chat');
   };
 
   const handleLogout = async () => {
@@ -38,19 +35,11 @@ const NavContainer: React.FC = () => {
   };
 
   const handleMyPageClick = () => {
-    if (isAuthenticated) {
-      router.push('/mypage');
-    } else {
-      router.push('/auth/signIn');
-    }
+    router.push('/mypage');
   };
 
   const handleCreateClick = () => {
-    if (isAuthenticated) {
-      router.push('/create');
-    } else {
-      router.push('/auth/signIn');
-    }
+    router.push('/create');
   };
 
   const toggleModal = () => {
@@ -59,6 +48,7 @@ const NavContainer: React.FC = () => {
 
   const closeModal = () => {
     if (isModalOpen) setIsModalOpen(false);
+    console.log(socialUser);
   };
 
   return (
