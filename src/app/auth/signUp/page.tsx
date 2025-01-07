@@ -8,7 +8,6 @@ import { SignupFormData, FormSchema } from '../schemas/SignUpSchema';
 import FormInput from '@/components/form/SignUpFormInput';
 import FormButton from '@/components/form/FormButton';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-const DEV_API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const LocalSignUpPage = () => {
   const router = useRouter();
@@ -138,7 +137,7 @@ const LocalSignUpPage = () => {
 
       if (response.status === 200) {
         alert('회원가입 성공! 로그인 페이지로 이동합니다.');
-        router.push(`${DEV_API_URL}/auth/signIn`);
+        router.push(`${BASE_URL}/auth/signIn`);
       }
     } catch (error) {
       alert(`회원가입 실패: ${error}`);

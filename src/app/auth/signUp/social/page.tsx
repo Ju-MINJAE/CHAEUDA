@@ -8,9 +8,8 @@ import { SocialSignupFormData, SocialSignUpSchema } from '@/app/auth/schemas/Soc
 import FormInput from '@/components/form/SocialSignUpFormInput';
 import FormButton from '@/components/form/FormButton';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-const DEV_API_URL = process.env.NEXT_PUBLIC_BASE_URL;
-import { NextResponse } from 'next/server';
-import { clearAuthCookies } from '@/utils/cookieUtils';
+// import { NextResponse } from 'next/server';
+// import { clearAuthCookies } from '@/utils/cookieUtils';
 
 const SocialSignUpPage = () => {
   const router = useRouter();
@@ -95,7 +94,7 @@ const SocialSignUpPage = () => {
       if (response.status === 200) {
         const data = await response.json();
         alert('회원가입 성공! 로그인 페이지로 이동합니다.');
-        router.push(`${DEV_API_URL}/auth/signIn`);
+        router.push(`${BASE_URL}/auth/signIn`);
       }
     } catch (error) {
       alert(`회원가입 실패: ${error}`);
