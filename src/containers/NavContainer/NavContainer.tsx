@@ -20,7 +20,7 @@ const NavContainer: React.FC = () => {
   const handleLogout = async () => {
     try {
       const { logout } = useAuthStore.getState();
-      const response = await fetch(`www.chaeuda.shop/auth/logout/api`);
+      const response = await fetch(`/auth/logout/api`);
 
       if (response.ok) {
         logout();
