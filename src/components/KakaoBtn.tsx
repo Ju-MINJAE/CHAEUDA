@@ -1,9 +1,8 @@
 import Image from 'next/image';
 
 const KakaoBtn = () => {
-
   const handleKakaoLogin = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/kakao/login/dev`;
+    window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/kakao/login`;
   };
 
   return (
