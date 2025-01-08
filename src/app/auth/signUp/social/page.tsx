@@ -92,9 +92,9 @@ const SocialSignUpPage = () => {
       if (response.status !== 200) return;
 
       if (response.status === 200) {
-        const data = await response.json();
+        // const data = await response.json();
         alert('회원가입 성공! 로그인 페이지로 이동합니다.');
-        router.push(`${BASE_URL}/auth/signIn`);
+        router.push(`${process.env.NEXT_PUBLIC_FRONT_URL}/auth/signIn`);
       }
     } catch (error) {
       alert(`회원가입 실패: ${error}`);
