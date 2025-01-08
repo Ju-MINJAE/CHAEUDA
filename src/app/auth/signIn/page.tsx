@@ -6,7 +6,6 @@ import FormButton from '@/components/form/FormButton';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import useAuthStore from '@/stores/authStore';
-import { setAuthCookie } from '@/utils/cookieUtils';
 import SocialBtnContainer from '@/containers/SocialBtnContainer/SocialBtnContainer';
 
 const SignIn = () => {
@@ -27,14 +26,13 @@ const SignIn = () => {
     const response = await sendLoginRequest(email, password);
 
     if (response.success) {
-      setAuthCookie('accessToken', response.tokens?.access || '');
-      setAuthCookie('refreshToken', response.tokens?.refresh || '');
 
       if (response.user) {
         login(response.user);
       }
       router.push('/');
     } else {
+      console.error('로그인 실패:', { email, password });
       setErrorMessages(response.message);
     }
     setLoading(false);

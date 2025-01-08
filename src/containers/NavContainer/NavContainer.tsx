@@ -8,7 +8,6 @@ import { Menu, X } from 'lucide-react';
 
 const NavContainer: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { socialUser } = useAuthStore();
 
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
@@ -22,10 +21,9 @@ const NavContainer: React.FC = () => {
       const { logout } = useAuthStore.getState();
       const response = await fetch(`/auth/logout/api`);
 
-      if (response.ok) {
+      if (response.status === 200) {
         logout();
         router.push('/');
-        console.log('로그아웃 성공');
       } else {
         console.error('로그아웃 요청 실패:');
       }

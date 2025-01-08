@@ -1,8 +1,12 @@
+'use server';
+
 import { LoginResponse, LogoutResponse, RefreshResponse } from '@/types/types';
 import { clearAuthCookies } from '@/utils/cookieUtils';
 import { getCookie } from 'cookies-next';
+import { cookies } from 'next/headers';
 
 export const sendLoginRequest = async (email: string, password: string): Promise<LoginResponse> => {
+  const cookieStore = await cookies();
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/login`, {
       method: 'POST',
@@ -10,8 +14,7 @@ export const sendLoginRequest = async (email: string, password: string): Promise
       body: JSON.stringify({ email, password }),
     });
 
-    
-    if (!response.ok) {
+    if (response.status !== 200) {
       const errorData = await response.json();
       return {
         success: false,
@@ -19,9 +22,21 @@ export const sendLoginRequest = async (email: string, password: string): Promise
       };
     }
 
-    const data: LoginResponse = await response.json();
-    return data;
+    const data = await response.json();
+    console.log(data);
+    cookieStore.set({
+      name: 'accessToken',
+      value: data.tokens.access,
+      httpOnly: true,
+    });
 
+    cookieStore.set({
+      name: 'refreshToken',
+      value: data.tokens.refresh,
+      httpOnly: true,
+    });
+
+    return data;
   } catch (error) {
     console.error('로그인 요청 오류:', error);
     return {
