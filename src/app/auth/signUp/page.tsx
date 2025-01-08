@@ -8,7 +8,6 @@ import { SignupFormData, FormSchema } from '../schemas/SignUpSchema';
 import FormInput from '@/components/form/SignUpFormInput';
 import FormButton from '@/components/form/FormButton';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-const DEV_API_URL = process.env.NEXT_PUBLIC_DEV_API_URL;
 
 const LocalSignUpPage = () => {
   const router = useRouter();
@@ -86,7 +85,6 @@ const LocalSignUpPage = () => {
         }
         return;
       }
-      
     } catch (error) {
       alert(`인증번호 전송 실패: ${error}`);
     }
@@ -139,7 +137,7 @@ const LocalSignUpPage = () => {
 
       if (response.status === 200) {
         alert('회원가입 성공! 로그인 페이지로 이동합니다.');
-        router.push(`${DEV_API_URL}/auth/signIn`);
+        router.push(`${process.env.NEXT_PUBLIC_FRONT_URL}/auth/signIn`);
       }
     } catch (error) {
       alert(`회원가입 실패: ${error}`);
@@ -149,7 +147,6 @@ const LocalSignUpPage = () => {
   return (
     <div className="pt-9 pb-9 w-full h-full flex justify-center items-center">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-[80%] sm:w-1/3 space-y-5">
-
         {/* 이메일 주소 인풋 */}
         <div className="flex flex-col space-y-1.5">
           <label htmlFor="email">이메일 주소</label>
@@ -204,7 +201,7 @@ const LocalSignUpPage = () => {
             <p className="text-kick text-sm">{errors.email_verificationCode.message}</p>
           )}
         </div>
-        
+
         {/* 이메일, 인증번호 제외 인풋들 */}
         {inputField.map(item => (
           <FormInput
