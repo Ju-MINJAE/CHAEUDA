@@ -47,15 +47,36 @@ export const sendLoginRequest = async (email: string, password: string): Promise
 };
 
 export const sendRefreshTokenRequest = async (refresh: string): Promise<RefreshResponse> => {
+  if (!refresh) {
+    return {
+      success: false,
+      message: 'Refresh token이 없습니다.',
+    };
+  }
+
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/refresh`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${refresh}`,
+      },
       body: JSON.stringify({ refresh }),
+      credentials: 'include',
     });
 
     if (!response.ok) {
-      throw new Error('API 요청 실패');
+      const errorData = await response.json().catch(() => ({}));
+      console.error('Refresh API Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        error: errorData,
+      });
+
+      return {
+        success: false,
+        message: `토큰 갱신 실패 (${response.status}): ${errorData.message || response.statusText}`,
+      };
     }
 
     const data: RefreshResponse = await response.json();
@@ -64,7 +85,7 @@ export const sendRefreshTokenRequest = async (refresh: string): Promise<RefreshR
     console.error('토큰 갱신 요청 오류:', error);
     return {
       success: false,
-      message: '토큰 갱신 요청에 실패했습니다.',
+      message: error instanceof Error ? error.message : '토큰 갱신 요청에 실패했습니다.',
     };
   }
 };

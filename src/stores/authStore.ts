@@ -15,7 +15,7 @@ const useAuthStore = create<AuthState>()(
   persist(
     set => ({
       user: null,
-      socialUser: null, // 초기값은 null
+      socialUser: null,
       isAuthenticated: false,
       login: userData =>
         set({
@@ -32,7 +32,7 @@ const useAuthStore = create<AuthState>()(
         set({
           socialUser: socialUserData,
           isAuthenticated: true,
-        }),
+        })
     }),
     {
       name: 'auth-storage',

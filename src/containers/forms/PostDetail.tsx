@@ -1,108 +1,248 @@
-import { PostDetailInput1, PostDetailInput2 } from './PostDetailInput';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { useState } from 'react';
 
-const PostDetailForm: React.FC = () => {
+interface PostDetailFormProps {
+  onSubmitData: (data: DetailData) => void;
+}
+
+export interface DetailData {
+  pro_title: string;
+  pro_price: number;
+  management_cost?: number;
+  pro_type: string;
+  pro_supply_a: number;
+  pro_site_a: number;
+  pro_floor: number;
+  pro_rooms: number;
+  pro_bathrooms: number;
+  pro_heat: string;
+  pro_construction_year: number;
+  description: string;
+}
+
+const PostDetailForm: React.FC<PostDetailFormProps> = ({ onSubmitData }) => {
+  const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [selectedHeat, setSelectedHeat] = useState<string | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<DetailData>({
+    defaultValues: {
+      management_cost: undefined,
+    },
+  });
+
+  const onSubmit: SubmitHandler<DetailData> = data => {
+    onSubmitData(data);
+  };
+
+  const handleTypeClick = (value: string) => {
+    setSelectedType(value);
+    setValue('pro_type', value);
+
+    const currentData = watch();
+    onSubmitData({ ...currentData, pro_type: value });
+  };
+
+  const handleHeatClick = (value: string) => {
+    setSelectedHeat(value);
+    setValue('pro_heat', value);
+
+    const currentData = watch();
+    onSubmitData({ ...currentData, pro_heat: value });
+  };
+
+  const registerWithChange = (name: keyof DetailData) => {
+    return {
+      ...register(name),
+      onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const value = e.target.type === 'number' ? Number(e.target.value) : e.target.value;
+        const currentData = watch();
+        onSubmitData({ ...currentData, [name]: value });
+      },
+    };
+  };
+
   return (
-    <div>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 text-[0.9rem]">
       <h2 className="text-lg font-semibold mb-4">매물 정보</h2>
       <div className="space-y-5 text-[0.9rem]">
-        <PostDetailInput1
-          label="제목"
-          id1="title"
-          type="text"
-          placeholder1="제목을 입력해주세요."
-        />
-        <PostDetailInput2
-          label="매매 ∙ 관리비(선택)"
-          id1="price"
-          id2="management_fee"
-          type="text"
-          placeholder1="매매 가격을 입력해주세요."
-          placeholder2="관리비용을 입력해주세요."
-        />
-        <label className="text-[0.95rem]">
-          건물 유형
-          <div className="flex gap-4 mt-2 text-[0.8rem]">
-            <button value="단독주택" className="w-[100px] border border-gray-300 py-2">
-              단독주택
-            </button>
-            <button value="다세대주택" className="w-[100px] border border-gray-300 py-2">
-              다세대주택
-            </button>
+        <label htmlFor="pro_title" className="text-[0.95rem]">
+          제목
+          <input
+            id="pro_title"
+            type="text"
+            {...registerWithChange('pro_title')}
+            placeholder="제목을 입력해주세요."
+            className="w-full border border-gray-300 px-4 py-2 mt-2 mb-4 text-[0.8rem]"
+          />
+        </label>
+        <label htmlFor="pro_price" className="text-[0.95rem]">
+          매매 ∙ 관리비(선택)
+          <div className="grid grid-cols-2 gap-4 mt-2 mb-4 text-[0.8rem]">
+            <input
+              id="pro_price"
+              type="number"
+              {...registerWithChange('pro_price')}
+              placeholder="매매 가격을 입력해주세요."
+              className="border border-gray-300 px-4 py-2"
+            />
+            <input
+              id="management_cost"
+              type="number"
+              {...registerWithChange('management_cost')}
+              placeholder="관리비용을 입력해주세요."
+              className="border border-gray-300 px-4 py-2"
+            />
           </div>
         </label>
+        <div>
+          <fieldset className="text-[0.95rem]">
+            <legend>건물 유형</legend>
+            <div className="flex gap-3 mt-2 text-[0.8rem]">
+              {[
+                { value: 'detached', label: '단독주택' },
+                { value: 'multi', label: '다세대주택' },
+                { value: 'type_etc', label: '기타' },
+              ].map(option => (
+                <label key={option.value} className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="pro_type"
+                    value={option.value}
+                    checked={selectedType === option.value}
+                    onChange={() => handleTypeClick(option.value)}
+                    className="hidden"
+                  />
+                  <span
+                    className={`block w-[80px] text-center py-2 border ${
+                      selectedType === option.value
+                        ? 'border-blue-500 bg-blue-100'
+                        : 'border-gray-300'
+                    }`}
+                  >
+                    {option.label}
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        </div>
+
         <div className="grid grid-cols-2 gap-4">
-          <PostDetailInput1
-            label="평수(공급면적)"
-            id1="size"
-            type="number"
-            placeholder1="평수를 입력해주세요."
-          />
-          <PostDetailInput1
-            label="부지면적"
-            id1="lotSize"
-            type="number"
-            placeholder1="평수를 입력해주세요."
-          />
+          <label htmlFor="pro_supply_a" className="text-[0.95rem]">
+            평수(공급면적)
+            <input
+              id="pro_supply_a"
+              type="number"
+              {...registerWithChange('pro_supply_a')}
+              placeholder="평수를 입력해주세요."
+              className="w-full border border-gray-300 px-4 py-2 mt-2 mb-4 text-[0.8rem]"
+            />
+          </label>
+          <label htmlFor="pro_site_a" className="text-[0.95rem]">
+            부지면적
+            <input
+              id="pro_site_a"
+              type="number"
+              {...registerWithChange('pro_site_a')}
+              placeholder="평수를 입력해주세요."
+              className="w-full border border-gray-300 px-4 py-2 mt-2 mb-4 text-[0.8rem]"
+            />
+          </label>
         </div>
         <div className="grid grid-cols-3 gap-4 m-0">
-          <PostDetailInput1
-            label="층 수"
-            id1="floor"
-            type="number"
-            placeholder1="층 수를 입력해주세요."
-          />
-          <PostDetailInput1
-            label="방 수"
-            id1="rooms"
-            type="number"
-            placeholder1="방 수를 입력해주세요."
-          />
-          <PostDetailInput1
-            label="욕실 수"
-            id1="bathrooms"
-            type="number"
-            placeholder1="욕실 수를 입력해주세요."
-          />
+          <label htmlFor="pro_floor" className="text-[0.95rem]">
+            층 수
+            <input
+              id="pro_floor"
+              type="number"
+              {...registerWithChange('pro_floor')}
+              placeholder="층 수를 입력해주세요."
+              className="w-full border border-gray-300 px-4 py-2 mt-2 mb-4 text-[0.8rem]"
+            />
+          </label>
+          <label htmlFor="pro_rooms" className="text-[0.95rem]">
+            방 수
+            <input
+              id="pro_rooms"
+              type="number"
+              {...registerWithChange('pro_rooms')}
+              placeholder="방 수를 입력해주세요."
+              className="w-full border border-gray-300 px-4 py-2 mt-2 mb-4 text-[0.8rem]"
+            />
+          </label>
+          <label htmlFor="pro_bathrooms" className="text-[0.95rem]">
+            욕실 수
+            <input
+              id="pro_bathrooms"
+              type="number"
+              {...registerWithChange('pro_bathrooms')}
+              placeholder="욕실 수를 입력해주세요."
+              className="w-full border border-gray-300 px-4 py-2 mt-2 mb-4 text-[0.8rem]"
+            />
+          </label>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <label className="text-[0.95rem]">
-            난방 방식
+          <fieldset className="text-[0.95rem]">
+            <legend>난방 방식</legend>
             <div className="flex gap-3 mt-2 text-[0.8rem]">
-              <button value="gasBoiler" className="w-[80px] border border-gray-300 py-2">
-                가스보일러
-              </button>
-              <button value="oilBoiler" className="w-[80px] border border-gray-300 py-2">
-                기름보일러
-              </button>
-              <button value="coalBoiler" className="w-[80px] border border-gray-300 py-2">
-                연탄보일러
-              </button>
-              <button value="ect" className="w-[80px] border border-gray-300 py-2">
-                기타
-              </button>
+              {[
+                { value: 'gas', label: '가스보일러' },
+                { value: 'oil', label: '기름보일러' },
+                { value: 'briquette', label: '연탄보일러' },
+                { value: 'heat_ect', label: '기타' },
+              ].map(option => (
+                <label key={option.value} className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="pro_heat"
+                    value={option.value}
+                    checked={selectedHeat === option.value}
+                    onChange={() => handleHeatClick(option.value)}
+                    className="hidden"
+                  />
+                  <span
+                    className={`block w-[80px] text-center py-2 border ${
+                      selectedHeat === option.value
+                        ? 'border-blue-500 bg-blue-100'
+                        : 'border-gray-300'
+                    }`}
+                  >
+                    {option.label}
+                  </span>
+                </label>
+              ))}
             </div>
+          </fieldset>
+
+          <label htmlFor="pro_construction_year" className="text-[0.95rem]">
+            건축 연도
+            <input
+              id="pro_construction_year"
+              type="number"
+              {...registerWithChange('pro_construction_year')}
+              placeholder="건축 연도를 입력해주세요."
+              className="w-full border border-gray-300 px-4 py-2 mt-2 mb-4 text-[0.8rem]"
+            />
           </label>
-          <PostDetailInput1
-            label="건축 연도"
-            id1="yearBuild"
-            type="number"
-            placeholder1="건축 연도를 입력해주세요."
-          />
         </div>
-        <label className="text-[0.95rem]">
+        <label htmlFor="description" className="text-[0.95rem]">
           상세 설명
           <textarea
-            id="content"
+            id="description"
+            {...registerWithChange('description')}
             placeholder="집에 대한 상세 설명을 입력해주세요."
             className="w-full border border-gray-300 px-4 py-2 mt-2 text-[0.8rem]"
-          ></textarea>
+          />
         </label>
       </div>
-    </div>
+    </form>
   );
 };
 
 export default PostDetailForm;
-
-{
-}

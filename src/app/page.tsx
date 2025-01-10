@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import SearchModal from '../components/SearchModal';
 import useAuthStore from '@/stores/authStore';
+import { useSearchParams } from 'next/navigation';
+import { jwtDecrypt } from '@/utils/jwtDecrypt';
 
 const NaverMap = dynamic(() => import('../components/NaverMap'), {
   loading: () => (
@@ -21,7 +23,7 @@ const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [topSearchInput, setTopSearchInput] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { socialLogin } = useAuthStore();
+  const { socialLogin, socialUser } = useAuthStore();
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -32,31 +34,23 @@ const Home = () => {
     setSearchQuery(e.target.value);
   };
 
+  const searchParams = useSearchParams();
+  const user = searchParams.get('user');
+
   useEffect(() => {
-    const getCookie = (name: string) => {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts === undefined) return;
-      if (parts.length === 2) {
-        const cookieValue = parts.pop();
-        if (cookieValue) {
-          return cookieValue.split(';').shift();
+    const fetchDecryptedUser = async () => {
+      if (user) {
+        const userData = await jwtDecrypt(user);
+        if (userData) {
+          socialLogin(userData);
+        } else {
+          console.error('사용자 정보를 복호화할 수 없습니다.');
         }
       }
-      return null;
     };
 
-    const userInfo = getCookie('user');
-
-    if (userInfo) {
-      const decodedUserInfo = JSON.parse(decodeURIComponent(userInfo));
-
-      if (decodedUserInfo.is_active === false) {
-        return;
-      }
-      socialLogin(decodedUserInfo);
-    }
-  }, []);
+    fetchDecryptedUser();
+  }, [user]);
 
   return (
     <div className="relative">

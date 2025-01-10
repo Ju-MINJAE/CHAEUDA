@@ -1,18 +1,21 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SocialSignupFormData, SocialSignUpSchema } from '@/app/auth/schemas/SocialSignInSchema';
 import FormInput from '@/components/form/SocialSignUpFormInput';
 import FormButton from '@/components/form/FormButton';
+import { jwtDecrypt } from '@/utils/jwtDecrypt';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-// import { NextResponse } from 'next/server';
-// import { clearAuthCookies } from '@/utils/cookieUtils';
+const DEV_API_URL = process.env.NEXT_PUBLIC_DEV_API_URL;
 
 const SocialSignUpPage = () => {
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const user = searchParams.get('user');
 
   const {
     register,
@@ -29,28 +32,20 @@ const SocialSignUpPage = () => {
   });
 
   useEffect(() => {
-    const getCookie = (name: string) => {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts === undefined) return;
-      if (parts.length === 2) {
-        const cookieValue = parts.pop();
-        if (cookieValue) {
-          return cookieValue.split(';').shift();
+    const fetchDecryptedUser = async () => {
+      if (user) {
+        const userData = await jwtDecrypt(user);
+        if (userData) {
+          setValue('email', userData.email);
+          setValue('username', userData.username);
+        } else {
+          console.error('사용자 정보를 복호화할 수 없습니다.');
         }
       }
-      return null;
     };
 
-    const userInfo = getCookie('user');
-    if (userInfo) {
-      const decodedUserInfo = JSON.parse(decodeURIComponent(userInfo));
-      setValue('email', decodedUserInfo.email);
-      setValue('username', decodedUserInfo.username);
-    } else {
-      console.log('사용자 정보가 없습니다.');
-    }
-  }, [setValue]);
+    fetchDecryptedUser();
+  }, [user, setValue]);
 
   const inputField = [
     {
@@ -83,6 +78,7 @@ const SocialSignUpPage = () => {
     }
 
     try {
+      console.log(data);
       const response = await fetch(`${BASE_URL}/api/users/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -92,9 +88,8 @@ const SocialSignUpPage = () => {
       if (response.status !== 200) return;
 
       if (response.status === 200) {
-        // const data = await response.json();
         alert('회원가입 성공! 로그인 페이지로 이동합니다.');
-        router.push(`${process.env.NEXT_PUBLIC_FRONT_URL}/auth/signIn`);
+        router.push(`${DEV_API_URL}/auth/signIn`);
       }
     } catch (error) {
       alert(`회원가입 실패: ${error}`);

@@ -1,9 +1,14 @@
 import Image from 'next/image';
 
+// const NaverBtn = () => {
+//   const handleNaverLogin = () => {
+//     const scope = 'name,email,phone'; // 요청할 정보에 mobile 추가
+//     window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/naver/login/dev?scope=${encodeURIComponent(scope)}`;
+//   };
+
 const NaverBtn = () => {
   const handleNaverLogin = () => {
-    const scope = 'name,email,phone'; // 요청할 정보에 mobile 추가
-    window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/naver/login?scope=${encodeURIComponent(scope)}`;
+    window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/naver/login/dev`;
   };
 
   return (

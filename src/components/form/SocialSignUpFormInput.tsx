@@ -11,7 +11,7 @@ interface InputFieldProps {
   name: keyof SocialSignupFormData;
   errorMessage?: string;
   disabled?: boolean;
-  placeholder: string | undefined;
+  placeholder?: string | undefined;
 }
 
 const Input = ({ 
@@ -32,7 +32,7 @@ const Input = ({
         id={id}
         type={type}
         defaultValue={defaultValue}
-        {...register(name)}
+        {...(register ? register(name) : {})}
         className="border border-gray-400 w-full h-9 text-4 p-2"
         disabled={disabled}
         placeholder={placeholder}

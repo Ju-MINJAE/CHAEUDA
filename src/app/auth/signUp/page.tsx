@@ -8,6 +8,7 @@ import { SignupFormData, FormSchema } from '../schemas/SignUpSchema';
 import FormInput from '@/components/form/SignUpFormInput';
 import FormButton from '@/components/form/FormButton';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const DEV_API_URL = process.env.NEXT_PUBLIC_DEV_API_URL;
 
 const LocalSignUpPage = () => {
   const router = useRouter();
@@ -73,7 +74,11 @@ const LocalSignUpPage = () => {
         body: JSON.stringify({ email }),
       });
 
-      if (response.status !== 200) return;
+      if (response.status !== 200) {
+        const { message } = await response.json();
+        setVerificationEmailMessage(message);
+        return;
+      }
 
       if (response.status === 200) {
         const { message } = await response.json();
@@ -137,7 +142,7 @@ const LocalSignUpPage = () => {
 
       if (response.status === 200) {
         alert('회원가입 성공! 로그인 페이지로 이동합니다.');
-        router.push(`${process.env.NEXT_PUBLIC_FRONT_URL}/auth/signIn`);
+        router.push(`${DEV_API_URL}/auth/signIn`);
       }
     } catch (error) {
       alert(`회원가입 실패: ${error}`);

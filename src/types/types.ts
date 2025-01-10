@@ -17,12 +17,13 @@ export type User = {
   phone_number: string;
 };
 
+// iat: 유저정보가 발급된 시점의 타임스탬프(디버깅 용도.) exp: 유저정보 토큰 만료 시간(없애면 만료 기간이 없어지는거라 위험)
 export type SocialUser = {
   email: string;
   username: string;
-  is_active: boolean;
-  is_email_verified: boolean;
-  is_social_login: boolean;
+  phone_number?: string;
+  iat?: number;
+  exp?: number;
 };
 
 export type LoginResponse = {

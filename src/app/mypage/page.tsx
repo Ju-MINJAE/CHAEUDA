@@ -3,10 +3,62 @@
 import { sendWithdrawRequest } from '@/api/auth';
 import useAuthStore from '@/stores/authStore';
 import { useRouter } from 'next/navigation';
+import FormInput from '@/components/form/SocialSignUpFormInput';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { SocialSignupFormData, SocialSignUpSchema } from '@/app/auth/schemas/SocialSignInSchema';
+import { useEffect } from 'react';
 
 const MyPage = () => {
-  const { user, logout } = useAuthStore();
+  const { user, logout, socialUser } = useAuthStore();
   const router = useRouter();
+
+  const {
+    register,
+    setValue,
+    formState: { errors },
+  } = useForm<SocialSignupFormData>({
+    resolver: zodResolver(SocialSignUpSchema),
+    defaultValues: {
+      email: '',
+      username: '',
+    },
+  });
+
+  const inputField = [
+    {
+      label: '이메일 주소',
+      id: 'email',
+      type: 'email',
+      name: 'email',
+      disabled: true,
+    },
+    {
+      label: '이름',
+      id: 'username',
+      type: 'text',
+      name: 'username',
+      disabled: true,
+    },
+    {
+      label: '휴대폰번호',
+      id: 'phone_number',
+      type: 'phone',
+      name: 'phone_number',
+      disabled: true,
+    },
+  ];
+
+  useEffect(() => {
+    setValue('email', user?.email || socialUser?.email || '');
+    setValue('username', user?.username || socialUser?.username || '');
+    setValue('phone_number', user?.phone_number || socialUser?.phone_number || '');
+  }, [user, socialUser]);
+
+  const handleMyPageClick = () => {
+    router.push('/mypage/editMypage');
+    console.log(1);
+  };
 
   // TODO: confirm 컴포넌트 제작
   // sendWithdrawRequest 요청시 password 받아오기. modal ? prompt?
@@ -25,28 +77,26 @@ const MyPage = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6">
-      <h2 className="text-3xl font-light text-kick mb-4">마이페이지</h2>
-      <label className="block text-sm font-medium text-gray-700 mb-1">이메일</label>
-      <p className="mb-4 p-2 bg-gray-100 border border-gray-300 rounded text-gray-600">
-        {user?.email || '이메일 정보 없음'}
-      </p>
-
-      <label className="block text-sm font-medium text-gray-700 mb-1">이름</label>
-      <p className="mb-4 p-2 bg-gray-100 border border-gray-300 rounded text-gray-600">
-        {user?.username || '이름 정보 없음'}
-      </p>
-
-      <label className="block text-sm font-medium text-gray-700 mb-1">전화번호</label>
-      <p className="mb-6 p-2 bg-gray-100 border border-gray-300 rounded text-gray-600">
-        {user?.phone_number || '전화번호 정보 없음'}
-      </p>
-
-      <button className="w-full py-2 bg-kick text-white font-semibold">정보 수정</button>
-      <hr className="my-6 border-gray-300" />
-      <button className="float-end text-kick" onClick={handleWithdraw}>
-        회원 탈퇴
-      </button>
+    <div className="pt-9 pb-9 w-full h-full flex justify-center items-center">
+      <div className="flex flex-col w-[80%] sm:w-1/3 space-y-5">
+        {inputField.map(item => (
+          <FormInput
+            key={item.id}
+            name={item.name as keyof SocialSignupFormData}
+            label={item.label}
+            id={item.id}
+            type={item.type}
+            register={register}
+            disabled={item.disabled}
+          />
+        ))}
+        <button onClick={handleMyPageClick} className="bg-kick w-full h-10 text-4 text-white">
+          정보 수정
+        </button>
+        <button className="float-end text-kick" onClick={handleWithdraw}>
+          회원 탈퇴
+        </button>
+      </div>
     </div>
   );
 };
