@@ -9,7 +9,9 @@ declare global {
 }
 
 interface NaverMapProps {
-  topSearchInput?: boolean;
+  topSearchInput: boolean;
+  searchQuery: string;
+  handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   initialCenter?: { lat: number; lng: number };
   initialZoom?: number;
 }
@@ -23,46 +25,46 @@ const NaverMap = ({
   const [searchAddress, setSearchAddress] = useState('');
   const [map, setMap] = useState<any>(null);
   const [marker, setMarker] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // 주소로 좌표 검색하는 함수
   const searchAddressToCoordinate = (address: string) => {
     if (!window.naver || !map || !marker) return;
+
+    setIsLoading(true);
+    setError(null);
 
     window.naver.maps.Service.geocode(
       {
         query: address,
       },
       function (status, response) {
+        setIsLoading(false);
+
         if (status === window.naver.maps.Service.Status.ERROR) {
-          console.log('Something Wrong!');
+          setError('검색 중 오류가 발생했습니다.');
           return;
         }
 
         if (response.v2.meta.totalCount === 0) {
-          console.log('totalCount' + response.v2.meta.totalCount);
+          setError('검색 결과가 없습니다.');
           return;
         }
 
         const item = response.v2.addresses[0];
         const point = new window.naver.maps.Point(Number(item.x), Number(item.y));
 
-        console.log({
-          address: item.roadAddress || item.jibunAddress,
-          coordinate: {
-            lat: Number(item.y),
-            lng: Number(item.x),
-          },
-        });
         map.setCenter(point);
         marker.setPosition(point);
       },
     );
   };
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    searchAddressToCoordinate(searchAddress);
-  };
+  // const handleSearchSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   searchAddressToCoordinate(searchAddress);
+  // };
 
   useEffect(() => {
     if (typeof window === 'undefined' || !mapRef.current) return;
@@ -85,7 +87,14 @@ const NaverMap = ({
 
       setMap(newMap);
       setMarker(newMarker);
+      setIsLoading(false);
     };
+
+    if (!process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID) {
+      setError('Naver Maps API 키가 설정되지 않았습니다.');
+      setIsLoading(false);
+      return;
+    }
 
     const existingScript = document.querySelector('script[src*="maps.js"]');
     if (!existingScript) {
@@ -107,7 +116,7 @@ const NaverMap = ({
     <div className="relative">
       {topSearchInput && (
         <div className="absolute right-5 z-30 w-[300px] p-5">
-          <form onSubmit={handleSearchSubmit} className="flex gap-2">
+          <form className="flex gap-2">
             <input
               type="text"
               value={searchAddress}
@@ -115,13 +124,17 @@ const NaverMap = ({
               placeholder="주소를 입력하세요"
               className="flex-1 border-2 border-gray-300 p-2 text-[0.8rem]"
             />
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 text-sm">
-              검색
-            </button>
           </form>
+          {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
         </div>
       )}
-      <div ref={mapRef} className="w-full h-[700px]"></div>
+      {isLoading ? (
+        <div className="w-full h-[700px] flex items-center justify-center bg-gray-100">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid"></div>
+        </div>
+      ) : (
+        <div ref={mapRef} className="w-full h-[700px]"></div>
+      )}
     </div>
   );
 };
