@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { EncryptJWT } from 'jose';
 
-const DEV_API_URL = process.env.NEXT_PUBLIC_DEV_API_URL;
+const DEV_API_URL = process.env.NEXT_PUBLIC_FRONT_URL;
 const JWT_SECRET = process.env.NEXT_PUBLIC_JWT_SECRET;
 
 export const dynamic = 'force-dynamic';
@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     }
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/naver/callback/dev?code=${code}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/naver/callback?code=${code}`,
       {
         method: 'GET',
         headers: {
@@ -31,9 +31,8 @@ export async function GET(req: NextRequest) {
     }
 
     const data = await response.json();
-console.log(data);
+    console.log(data);
     if (data.success) {
-
       const jwt = await new EncryptJWT({
         email: data.user.email,
         username: data.user.username,
@@ -43,7 +42,7 @@ console.log(data);
         .setIssuedAt()
         .setExpirationTime('1h')
         .encrypt(new TextEncoder().encode(JWT_SECRET));
-        
+
       const redirectUrl = data.user.is_active
         ? `${data.redirect_url}?user=${jwt}`
         : `${DEV_API_URL}/auth/signUp/social?user=${jwt}`;

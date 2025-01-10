@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 const GoogleBtn = () => {
   const handleGoogleLogin = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/google/login/dev`;
+    window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/google/login`;
   };
 
   return (

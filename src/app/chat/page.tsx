@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Menu, MapPin } from 'lucide-react';
-import ChatList from '@/components/ChatList';
+import ChatList from '@/components/chat/ChatList';
 import { Chat } from '@/types/chat';
 import { fetchChatList } from '@/api/chat';
+import ChatRoom from '@/components/chat/ChatRoom';
+import useAccessToken from '@/hooks/useAccessToken';
 
 const ChatPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -13,32 +14,8 @@ const ChatPage = () => {
   const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [accessToken, setAccessToken] = useState<string | null>(null);
-  // const router = useRouter();
 
-  useEffect(() => {
-    const fetchToken = async () => {
-      try {
-        const response = await fetch('/api/token', {
-          method: 'GET',
-          credentials: 'include',
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch token');
-        }
-        const data = await response.json();
-        // console.log(data);
-        setAccessToken(data.accessToken);
-      } catch (err) {
-        console.error(err);
-        setError('토큰을 가져오지 못했습니다.');
-        setIsLoading(false);
-      }
-    };
-
-    fetchToken();
-  }, []);
+  const accessToken = useAccessToken();
 
   useEffect(() => {
     if (accessToken) {
@@ -115,6 +92,7 @@ const ChatPage = () => {
             <Menu size={24} />
           </button>
         </header>
+        <ChatRoom chatId={18} />
       </div>
     </div>
   );

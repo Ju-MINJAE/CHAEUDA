@@ -1,4 +1,5 @@
 import { createChatRequest } from '@/api/chat';
+import useAccessToken from '@/hooks/useAccessToken';
 import { Chat, ChatListProps } from '@/types/chat';
 import { useState } from 'react';
 
@@ -12,24 +13,19 @@ const ChatList: React.FC<ChatListProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const accessToken = useAccessToken();
+
   const handleCreateChat = async () => {
+    if (!accessToken) {
+      setError('AccessToken을 가져오지 못했습니다');
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
     try {
-      const tokenResponse = await fetch('/api/token', {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if (!tokenResponse.ok) {
-        throw new Error('토큰을 가져오는 데 실패했습니다.');
-      }
-
-      const tokenData = await tokenResponse.json();
-      const accessToken = tokenData.accessToken;
-
-      const response = await createChatRequest(accessToken, 6);
+      const response = await createChatRequest(accessToken, 10);
 
       if (response.success) {
         const newChat = response.chatRoom;

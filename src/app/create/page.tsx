@@ -3,7 +3,7 @@
 import ImageUploadForm, { ProductImageData } from '@/containers/forms/ImageUpload';
 import LocationInfoForm, { LocationData } from '@/containers/forms/LocationInfo';
 import PostDetailForm, { DetailData } from '@/containers/forms/PostDetail';
-import { getCookie } from 'cookies-next';
+import useAccessToken from '@/hooks/useAccessToken';
 import { useRouter } from 'next/navigation';
 
 import { useEffect, useState } from 'react';
@@ -15,29 +15,8 @@ const CreatePost: React.FC = () => {
   const [imageData, setImageData] = useState<ProductImageData | null>(null);
   const [locationData, setLocationData] = useState<LocationData | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [accessToken, setAccessToken] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchToken = async () => {
-      try {
-        const response = await fetch('/api/token', {
-          method: 'GET',
-          credentials: 'include',
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch token');
-        }
-
-        const data = await response.json();
-        setAccessToken(data.accessToken);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchToken();
-  }, []);
+  const accessToken = useAccessToken();
 
   const handlePostDetailSubmit = (data: DetailData) => {
     setPostDetailData(data);

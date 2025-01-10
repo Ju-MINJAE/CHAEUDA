@@ -8,7 +8,7 @@ import { SignupFormData, FormSchema } from '../schemas/SignUpSchema';
 import FormInput from '@/components/form/SignUpFormInput';
 import FormButton from '@/components/form/FormButton';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-const DEV_API_URL = process.env.NEXT_PUBLIC_DEV_API_URL;
+const DEV_API_URL = process.env.NEXT_PUBLIC_FRONT_URL;
 
 const LocalSignUpPage = () => {
   const router = useRouter();
