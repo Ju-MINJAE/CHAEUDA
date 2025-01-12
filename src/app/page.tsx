@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import SearchModal from '../components/SearchModal';
 import useAuthStore from '@/stores/authStore';
@@ -53,18 +53,20 @@ const Home = () => {
   }, [user]);
 
   return (
-    <div className="relative">
-      <NaverMap
-        topSearchInput={topSearchInput}
-        searchQuery={searchQuery}
-        handleSearchChange={handleSearchChange}
-      />
-      <SearchModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        handleSearchChange={handleSearchChange}
-      />
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <div className="relative">
+        <NaverMap
+          topSearchInput={topSearchInput}
+          searchQuery={searchQuery}
+          handleSearchChange={handleSearchChange}
+        />
+        <SearchModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          handleSearchChange={handleSearchChange}
+        />
+      </div>
+    </Suspense>
   );
 };
 
