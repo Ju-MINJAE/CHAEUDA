@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -150,80 +150,87 @@ const LocalSignUpPage = () => {
   };
 
   return (
-    <div className="pt-9 pb-9 w-full h-full flex justify-center items-center">
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-[80%] sm:w-1/3 space-y-5">
-        {/* 이메일 주소 인풋 */}
-        <div className="flex flex-col space-y-1.5">
-          <label htmlFor="email">이메일 주소</label>
-          <div className="flex flex-col sm:flex-row sm:space-x-2 w-full">
-            <input
-              id="email"
-              type="email"
-              {...register('email')}
-              placeholder="이메일을 입력하세요"
-              className="border border-gray-400 w-full h-9 text-4 p-2"
-            />
-            <button
-              type="button"
-              onClick={sendEmailVerificationCode}
-              disabled={!watch('email') || emailVerificationSent}
-              className={`w-full sm:w-28 h-9 text-[14px] cursor-pointer ${emailVerificationSent ? 'bg-gray-200 text-gray-500' : 'border border-gray-900'}`}
-            >
-              이메일 인증
-            </button>
+    <Suspense
+      fallback={<div className="flex justify-center items-center min-h-screen">Loading...</div>}
+    >
+      <div className="pt-9 pb-9 w-full h-full flex justify-center items-center">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col w-[80%] sm:w-1/3 space-y-5"
+        >
+          {/* 이메일 주소 인풋 */}
+          <div className="flex flex-col space-y-1.5">
+            <label htmlFor="email">이메일 주소</label>
+            <div className="flex flex-col sm:flex-row sm:space-x-2 w-full">
+              <input
+                id="email"
+                type="email"
+                {...register('email')}
+                placeholder="이메일을 입력하세요"
+                className="border border-gray-400 w-full h-9 text-4 p-2"
+              />
+              <button
+                type="button"
+                onClick={sendEmailVerificationCode}
+                disabled={!watch('email') || emailVerificationSent}
+                className={`w-full sm:w-28 h-9 text-[14px] cursor-pointer ${emailVerificationSent ? 'bg-gray-200 text-gray-500' : 'border border-gray-900'}`}
+              >
+                이메일 인증
+              </button>
+            </div>
+            {verificationEmailMessage && (
+              <p className="text-green-600 text-sm">{verificationEmailMessage}</p>
+            )}
+            {errors.email && <p className="text-kick text-sm">{errors.email.message}</p>}
           </div>
-          {verificationEmailMessage && (
-            <p className="text-green-600 text-sm">{verificationEmailMessage}</p>
-          )}
-          {errors.email && <p className="text-kick text-sm">{errors.email.message}</p>}
-        </div>
 
-        {/* 이메일 인증번호 인풋 */}
-        <div className="flex flex-col space-y-1.5">
-          <label htmlFor="authenticateEmail">이메일 인증번호</label>
-          <div className="flex flex-col sm:flex-row sm:space-x-2">
-            <input
-              id="authenticateEmail"
-              type="number"
-              {...register('email_verificationCode')}
-              className="border border-gray-400 w-full h-9 text-4 p-2"
-              disabled={!emailVerificationSent}
-              placeholder="이메일 인증번호를 입력하세요"
-            />
-            <button
-              type="button"
-              onClick={verifyEmailVerificationCode}
-              disabled={isEmailVerified}
-              className={`w-full sm:w-28 h-9 text-[14px] cursor-pointer ${isEmailVerified ? 'bg-gray-200 text-gray-500' : 'border border-gray-900'}`}
-            >
-              인증번호 확인
-            </button>
+          {/* 이메일 인증번호 인풋 */}
+          <div className="flex flex-col space-y-1.5">
+            <label htmlFor="authenticateEmail">이메일 인증번호</label>
+            <div className="flex flex-col sm:flex-row sm:space-x-2">
+              <input
+                id="authenticateEmail"
+                type="number"
+                {...register('email_verificationCode')}
+                className="border border-gray-400 w-full h-9 text-4 p-2"
+                disabled={!emailVerificationSent}
+                placeholder="이메일 인증번호를 입력하세요"
+              />
+              <button
+                type="button"
+                onClick={verifyEmailVerificationCode}
+                disabled={isEmailVerified}
+                className={`w-full sm:w-28 h-9 text-[14px] cursor-pointer ${isEmailVerified ? 'bg-gray-200 text-gray-500' : 'border border-gray-900'}`}
+              >
+                인증번호 확인
+              </button>
+            </div>
+            {verificationCodeMessage && (
+              <p className="text-green-600 text-sm">{verificationCodeMessage}</p>
+            )}
+            {errors.email_verificationCode && (
+              <p className="text-kick text-sm">{errors.email_verificationCode.message}</p>
+            )}
           </div>
-          {verificationCodeMessage && (
-            <p className="text-green-600 text-sm">{verificationCodeMessage}</p>
-          )}
-          {errors.email_verificationCode && (
-            <p className="text-kick text-sm">{errors.email_verificationCode.message}</p>
-          )}
-        </div>
 
-        {/* 이메일, 인증번호 제외 인풋들 */}
-        {inputField.map(item => (
-          <FormInput
-            key={item.id}
-            name={item.name as keyof SignupFormData}
-            label={item.label}
-            id={item.id}
-            type={item.type}
-            register={register}
-            errorMessage={errors[item.name as keyof SignupFormData]?.message}
-            placeholder={item.placeholder}
-          />
-        ))}
+          {/* 이메일, 인증번호 제외 인풋들 */}
+          {inputField.map(item => (
+            <FormInput
+              key={item.id}
+              name={item.name as keyof SignupFormData}
+              label={item.label}
+              id={item.id}
+              type={item.type}
+              register={register}
+              errorMessage={errors[item.name as keyof SignupFormData]?.message}
+              placeholder={item.placeholder}
+            />
+          ))}
 
-        <FormButton>회원가입</FormButton>
-      </form>
-    </div>
+          <FormButton>회원가입</FormButton>
+        </form>
+      </div>
+    </Suspense>
   );
 };
 
