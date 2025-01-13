@@ -74,6 +74,7 @@ const LocalSignUpPage = () => {
         body: JSON.stringify({ email }),
       });
 
+      console.log(response);
       if (response.status !== 200) {
         const { message } = await response.json();
         setVerificationEmailMessage(message);

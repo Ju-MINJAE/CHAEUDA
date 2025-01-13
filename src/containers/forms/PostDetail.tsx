@@ -195,7 +195,7 @@ const PostDetailForm: React.FC<PostDetailFormProps> = ({ onSubmitData }) => {
                 { value: 'gas', label: '가스보일러' },
                 { value: 'oil', label: '기름보일러' },
                 { value: 'briquette', label: '연탄보일러' },
-                { value: 'heat_ect', label: '기타' },
+                { value: 'heat_etc', label: '기타' },
               ].map(option => (
                 <label key={option.value} className="flex items-center gap-2 cursor-pointer">
                   <input

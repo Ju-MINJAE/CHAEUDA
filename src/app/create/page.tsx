@@ -14,7 +14,6 @@ const CreatePost: React.FC = () => {
   const [postDetailData, setPostDetailData] = useState<DetailData | null>(null);
   const [imageData, setImageData] = useState<ProductImageData | null>(null);
   const [locationData, setLocationData] = useState<LocationData | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
 
   const accessToken = useAccessToken();
 
@@ -41,8 +40,6 @@ const CreatePost: React.FC = () => {
       alert('최소 1장 이상의 사진을 등록해야 합니다.');
       return;
     }
-
-    setIsUploading(true);
 
     try {
       const formData = new FormData();
@@ -97,8 +94,6 @@ const CreatePost: React.FC = () => {
           ? error.message
           : '매물 등록 중 문제가 발생했습니다. 다시 시도해주세요.',
       );
-    } finally {
-      setIsUploading(false);
     }
   };
 

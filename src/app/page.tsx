@@ -2,10 +2,11 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import SearchModal from '../components/SearchModal';
+
 import useAuthStore from '@/stores/authStore';
 import { useSearchParams } from 'next/navigation';
 import { jwtDecrypt } from '@/utils/jwtDecrypt';
+import SearchModal from '@/components/modals/SearchModal';
 
 const NaverMap = dynamic(() => import('../components/NaverMap'), {
   loading: () => (
@@ -23,7 +24,7 @@ const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [topSearchInput, setTopSearchInput] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { socialLogin, socialUser } = useAuthStore();
+  const { login, user } = useAuthStore();
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -35,14 +36,14 @@ const Home = () => {
   };
 
   const searchParams = useSearchParams();
-  const user = searchParams.get('user');
+  const userData = searchParams.get('user');
 
   useEffect(() => {
     const fetchDecryptedUser = async () => {
-      if (user) {
-        const userData = await jwtDecrypt(user);
-        if (userData) {
-          socialLogin(userData);
+      if (userData) {
+        const decryptedUserData = await jwtDecrypt(userData);
+        if (decryptedUserData) {
+          login(decryptedUserData);
         } else {
           console.error('사용자 정보를 복호화할 수 없습니다.');
         }
@@ -50,8 +51,8 @@ const Home = () => {
     };
 
     fetchDecryptedUser();
-  }, [user]);
-
+  }, [userData]);
+console.log(user);
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <div className="relative">

@@ -10,7 +10,7 @@ import { SocialSignupFormData, SocialSignUpSchema } from '@/app/auth/schemas/Soc
 import { useEffect } from 'react';
 
 const MyPage = () => {
-  const { user, logout, socialUser } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const router = useRouter();
 
   const {
@@ -50,18 +50,19 @@ const MyPage = () => {
   ];
 
   useEffect(() => {
-    setValue('email', user?.email || socialUser?.email || '');
-    setValue('username', user?.username || socialUser?.username || '');
-    setValue('phone_number', user?.phone_number || socialUser?.phone_number || '');
-  }, [user, socialUser]);
+    setValue('email', user?.email || '');
+    setValue('username', user?.username || '');
+    setValue('phone_number', user?.phone_number || '');
+  }, [user, setValue]);
 
   const handleMyPageClick = () => {
-    router.push('/mypage/editMypage');
-    console.log(1);
+    if (user) {
+      router.push('/mypage/editMypage');
+      return;
+    }
   };
 
-  // TODO: confirm 컴포넌트 제작
-  // sendWithdrawRequest 요청시 password 받아오기. modal ? prompt?
+  // 회원 탈퇴 요청 함수
   const handleWithdraw = async () => {
     const confirmed = confirm('정말로 회원 탈퇴를 진행하시겠습니까?');
     if (!confirmed) return;

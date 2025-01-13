@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
       res.cookies.delete('refreshToken');
       return res;
     } else {
-      console.error('로그아웃 요청 실패:', response.message);
+      console.error('로그아웃 요청 실패', response.message);
       return NextResponse.json({ success: false, message: '로그아웃 요청 실패' }, { status: 500 });
     }
   } else {

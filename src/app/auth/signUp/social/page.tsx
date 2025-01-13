@@ -15,7 +15,7 @@ const SocialSignUpPage = () => {
   const router = useRouter();
 
   const searchParams = useSearchParams();
-  const user = searchParams.get('user');
+  const userData = searchParams.get('user');
 
   const {
     register,
@@ -33,11 +33,11 @@ const SocialSignUpPage = () => {
 
   useEffect(() => {
     const fetchDecryptedUser = async () => {
-      if (user) {
-        const userData = await jwtDecrypt(user);
-        if (userData) {
-          setValue('email', userData.email);
-          setValue('username', userData.username);
+      if (userData) {
+        const decryptedUserData = await jwtDecrypt(userData);
+        if (decryptedUserData) {
+          setValue('email', decryptedUserData.email);
+          setValue('username', decryptedUserData.username);
         } else {
           console.error('사용자 정보를 복호화할 수 없습니다.');
         }
@@ -45,7 +45,7 @@ const SocialSignUpPage = () => {
     };
 
     fetchDecryptedUser();
-  }, [user, setValue]);
+  }, [userData, setValue]);
 
   const inputField = [
     {
@@ -73,12 +73,7 @@ const SocialSignUpPage = () => {
 
   // 최종 회원가입
   const onSubmit = async (data: SocialSignupFormData): Promise<void> => {
-    if (data.phone_number === undefined) {
-      return;
-    }
-
     try {
-      console.log(data);
       const response = await fetch(`${BASE_URL}/api/users/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

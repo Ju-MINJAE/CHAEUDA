@@ -11,19 +11,14 @@ export type Tokens = {
   refresh: string;
 };
 
-export type User = {
-  email: string;
-  username: string;
-  phone_number: string;
-};
-
 // iat: 유저정보가 발급된 시점의 타임스탬프(디버깅 용도.) exp: 유저정보 토큰 만료 시간(없애면 만료 기간이 없어지는거라 위험)
-export type SocialUser = {
+export type User = {
   email: string;
   username: string;
   phone_number?: string;
   iat?: number;
   exp?: number;
+  is_active?: string;
 };
 
 export type LoginResponse = {

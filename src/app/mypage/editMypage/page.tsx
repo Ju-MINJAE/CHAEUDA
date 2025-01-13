@@ -1,43 +1,44 @@
 'use client';
 
-import { sendWithdrawRequest } from '@/api/auth';
 import useAuthStore from '@/stores/authStore';
 import { useRouter } from 'next/navigation';
-import FormInput from '@/components/form/SocialSignUpFormInput';
+import FormInput from '@/components/form/SocialMypageFormInput';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SocialSignupFormData, SocialSignUpSchema } from '@/app/auth/schemas/SocialSignInSchema';
+import {
+  SocialEditMypageFormData,
+  SocialEditMypageSchema,
+} from '@/app/auth/schemas/SocialEditMypageSchema';
 import { useEffect } from 'react';
 import FormButton from '@/components/form/FormButton';
+
+import useUpdateProfile from '@/hooks/useUpdateProfile';
+import useFetchProfile from '@/hooks/useFetchProfile';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const DEV_API_URL = process.env.NEXT_PUBLIC_FRONT_URL;
 
 const MyPage = () => {
-  const { user, socialUser } = useAuthStore();
+  const { login, user } = useAuthStore();
   const router = useRouter();
+  const { updateProfile } = useUpdateProfile();
+  const { getUpdateProfile } = useFetchProfile();
 
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<SocialSignupFormData>({
-    resolver: zodResolver(SocialSignUpSchema),
+  } = useForm<SocialEditMypageFormData>({
+    resolver: zodResolver(SocialEditMypageSchema),
     mode: 'onBlur',
     defaultValues: {
-      email: '',
+      //   email: '',
       username: '',
+      phone_number: '',
     },
   });
 
   const inputField = [
-    {
-      label: '이메일 주소',
-      id: 'email',
-      type: 'email',
-      name: 'email',
-      disabled: true,
-    },
     {
       label: '이름',
       id: 'username',
@@ -55,47 +56,50 @@ const MyPage = () => {
   ];
 
   useEffect(() => {
-    setValue('email', user?.email || socialUser?.email || '');
-    setValue('username', user?.username || socialUser?.username || '');
-    setValue('phone_number', user?.phone_number || socialUser?.phone_number || '');
-  }, [user, socialUser]);
+    setValue('username', user?.username || '');
+    setValue('phone_number', user?.phone_number || '');
+  }, [user]);
 
   // 최종 수정 버튼 클릭
-  const onSubmit = async (data: SocialSignupFormData): Promise<void> => {
-    if (data.phone_number === undefined) {
-      return;
-    }
+  const onSubmit = async (data: SocialEditMypageFormData): Promise<void> => {
 
     try {
-      const response = await fetch(`${BASE_URL}/api/users/signup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
+      const result = await updateProfile(data);
 
-      if (response.status !== 200) return;
-
-      if (response.status === 200) {
-        alert('회원가입 성공! 로그인 페이지로 이동합니다.');
-        router.push(`${DEV_API_URL}/auth/signIn`);
+      if (result.success) {
+        const result = await getUpdateProfile();
+        console.log(result);
+        router.back();
+        login(result.user);
       }
     } catch (error) {
-      alert(`회원가입 실패: ${error}`);
+      console.error('회원정보 수정 실패:', error);
     }
   };
 
   return (
     <div className="pt-9 pb-9 w-full h-full flex justify-center items-center">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-[80%] sm:w-1/3 space-y-5">
+        <div className="flex flex-col space-y-1.5">
+          <label htmlFor="email">이메일 주소</label>
+          <input
+            id="email"
+            type="email"
+            defaultValue={(user && user.email) || ''}
+            className="border border-gray-400 w-full h-9 text-4 p-2"
+            disabled={true}
+          />
+        </div>
+
         {inputField.map(item => (
           <FormInput
             key={item.id}
-            name={item.name as keyof SocialSignupFormData}
+            name={item.name as keyof SocialEditMypageFormData}
             label={item.label}
             id={item.id}
             type={item.type}
             register={register}
-            errorMessage={errors[item.name as keyof SocialSignupFormData]?.message}
+            errorMessage={errors[item.name as keyof SocialEditMypageFormData]?.message}
             disabled={item.disabled}
             placeholder={item.placeholder}
           />

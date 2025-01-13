@@ -10,8 +10,10 @@ export type Chat = {
 
 export type Message = {
   id: string;
-  user: string;
   content: string;
+  sender: string;
+  createdAt: Date;
+  chatRoom: string;
 };
 
 export type ChatListProps = {
@@ -19,4 +21,8 @@ export type ChatListProps = {
   onSelectChat: (chatId: number) => void;
   selectedChatId: number | null;
   onChatCreated?: (newChat: Chat) => void;
+};
+
+export type ChatRoomProps = {
+  chatId: number;
 };

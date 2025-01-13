@@ -46,7 +46,7 @@ export const sendLoginRequest = async (email: string, password: string): Promise
   }
 };
 
-export const sendRefreshTokenRequest = async (refresh: string): Promise<RefreshResponse> => {
+export const sendRefreshTokenRequest = async (refresh: string | undefined): Promise<RefreshResponse> => {
   if (!refresh) {
     return {
       success: false,

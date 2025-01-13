@@ -6,7 +6,7 @@ export const FormSchema = z
       .string()
       .min(2, '이름은 최소 2자 이상이어야 합니다.')
       .max(30, '이름은 최대 30자까지만 허용됩니다.')
-      .regex(/^\S*$/, '이름에는 공백이 포함될 수 없습니다.'),
+      .regex(/^[^\p{Emoji_Presentation}\p{Symbol}\p{Punctuation}\s]*$/u, '이름에는 이모티콘, 기호, 공백이 포함될 수 없습니다.'),
 
       password: z
       .string()
