@@ -12,7 +12,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ chatId }) => {
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const accessToken = useAccessToken();
   const { user } = useAuthStore();
-  const myName = user?.username
+  const myName = user?.username;
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const connect = useCallback(() => {
