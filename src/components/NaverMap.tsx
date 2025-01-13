@@ -28,7 +28,6 @@ const NaverMap = ({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // 주소로 좌표 검색하는 함수
   const searchAddressToCoordinate = (address: string) => {
     if (!window.naver || !map || !marker) return;
 
@@ -60,7 +59,6 @@ const NaverMap = ({
       },
     );
   };
-
   // const handleSearchSubmit = (e: React.FormEvent) => {
   //   e.preventDefault();
   //   searchAddressToCoordinate(searchAddress);
@@ -78,16 +76,17 @@ const NaverMap = ({
         zoomControl: false,
       };
 
-      const newMap = new window.naver.maps.Map(mapRef.current, mapOptions);
+      new window.naver.maps.Map(mapRef.current, mapOptions);
 
-      const newMarker = new window.naver.maps.Marker({
-        position: new window.naver.maps.LatLng(initialCenter.lat, initialCenter.lng),
-        map: newMap,
-      });
+      // const newMarker = new window.naver.maps.Marker({
+      //   position: new window.naver.maps.LatLng(initialCenter.lat, initialCenter.lng),
+      //   map: newMap,
+      // });
 
-      setMap(newMap);
-      setMarker(newMarker);
-      setIsLoading(false);
+
+      // setMap(newMap);
+      // setMarker(newMarker);
+
     };
 
     if (!process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID) {

@@ -62,7 +62,6 @@ const MyPage = () => {
 
   // 최종 수정 버튼 클릭
   const onSubmit = async (data: SocialEditMypageFormData): Promise<void> => {
-
     try {
       const result = await updateProfile(data);
 

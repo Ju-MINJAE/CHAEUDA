@@ -42,3 +42,15 @@ export const Pro_heat: Record<string, string> = {
   briquette: '연탄보일러',
   heat_etc: '기타',
 };
+
+export type MyProduct = {
+  product_id: string;
+  images: string;
+  pro_title: string;
+  pro_price: number;
+  pro_type: string;
+  pro_supply_a: number;
+  add_new: string;
+  created_at: string;
+  is_liked: boolean;
+};
