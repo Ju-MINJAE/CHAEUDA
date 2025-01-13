@@ -8,7 +8,7 @@ import { Menu, X } from 'lucide-react';
 
 const NavContainer: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { socialUser } = useAuthStore();
+  const { user } = useAuthStore();
 
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
@@ -47,7 +47,6 @@ const NavContainer: React.FC = () => {
 
   const closeModal = () => {
     if (isModalOpen) setIsModalOpen(false);
-    console.log(socialUser);
   };
 
   return (
