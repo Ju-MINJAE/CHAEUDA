@@ -1,32 +1,32 @@
 import React from 'react';
 import { UseFormRegister } from 'react-hook-form';
-import { SocialEditMypageFormData } from '@/app/auth/schemas/SocialEditMypageSchema';
+import { EditMypageFormData } from '@/app/auth/schemas/EditMypageSchema';
 
 interface InputFieldProps {
   label: string;
   id: string;
   type: string;
   defaultValue?: string;
-  register: UseFormRegister<SocialEditMypageFormData>;
-  name: keyof SocialEditMypageFormData;
+  register: UseFormRegister<EditMypageFormData>;
+  name: keyof EditMypageFormData;
   errorMessage?: string;
   disabled?: boolean;
   placeholder: string;
 }
 
-const Input = ({ 
-  label, 
-  id, 
-  type, 
+const Input = ({
+  label,
+  id,
+  type,
   defaultValue,
-  register, 
+  register,
   name,
   errorMessage,
   disabled,
-  placeholder
+  placeholder,
 }: InputFieldProps) => {
   return (
-    <div className='flex flex-col space-y-1.5'>
+    <div className="flex flex-col space-y-1.5">
       <label htmlFor={id}>{label}</label>
       <input
         id={id}
