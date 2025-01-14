@@ -54,7 +54,10 @@ export default function ProductDetailPage({ params }: { params: { product_id: st
             <div className="px-8 py-6">
               <Images images={product.images} video={product.video} />
               <DetailContent product={product} />
-              <Contact phone_number={product.user.phone_number} productId={product.product_id} />
+              <Contact
+                phone_number={product.user.phone_number}
+                productId={Number(product.product_id)}
+              />
             </div>
           ) : (
             <div>정보를 불러오는데 실패했습니다.</div>
