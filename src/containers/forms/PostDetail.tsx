@@ -87,6 +87,7 @@ const PostDetailForm: React.FC<PostDetailFormProps> = ({ onSubmitData }) => {
             <input
               id="pro_price"
               type="number"
+              onWheel={e => e.currentTarget.blur()}
               {...registerWithChange('pro_price')}
               placeholder="매매 가격을 입력해주세요."
               className="border border-gray-300 px-4 py-2"
@@ -94,6 +95,7 @@ const PostDetailForm: React.FC<PostDetailFormProps> = ({ onSubmitData }) => {
             <input
               id="management_cost"
               type="number"
+              onWheel={e => e.currentTarget.blur()}
               {...registerWithChange('management_cost')}
               placeholder="관리비용을 입력해주세요."
               className="border border-gray-300 px-4 py-2"
@@ -139,6 +141,7 @@ const PostDetailForm: React.FC<PostDetailFormProps> = ({ onSubmitData }) => {
             <input
               id="pro_supply_a"
               type="number"
+              onWheel={e => e.currentTarget.blur()}
               {...registerWithChange('pro_supply_a')}
               placeholder="평수를 입력해주세요."
               className="w-full border border-gray-300 px-4 py-2 mt-2 mb-4 text-[0.8rem]"
@@ -149,6 +152,7 @@ const PostDetailForm: React.FC<PostDetailFormProps> = ({ onSubmitData }) => {
             <input
               id="pro_site_a"
               type="number"
+              onWheel={e => e.currentTarget.blur()}
               {...registerWithChange('pro_site_a')}
               placeholder="평수를 입력해주세요."
               className="w-full border border-gray-300 px-4 py-2 mt-2 mb-4 text-[0.8rem]"
@@ -161,6 +165,7 @@ const PostDetailForm: React.FC<PostDetailFormProps> = ({ onSubmitData }) => {
             <input
               id="pro_floor"
               type="number"
+              onWheel={e => e.currentTarget.blur()}
               {...registerWithChange('pro_floor')}
               placeholder="층 수를 입력해주세요."
               className="w-full border border-gray-300 px-4 py-2 mt-2 mb-4 text-[0.8rem]"
@@ -171,6 +176,7 @@ const PostDetailForm: React.FC<PostDetailFormProps> = ({ onSubmitData }) => {
             <input
               id="pro_rooms"
               type="number"
+              onWheel={e => e.currentTarget.blur()}
               {...registerWithChange('pro_rooms')}
               placeholder="방 수를 입력해주세요."
               className="w-full border border-gray-300 px-4 py-2 mt-2 mb-4 text-[0.8rem]"
@@ -181,6 +187,7 @@ const PostDetailForm: React.FC<PostDetailFormProps> = ({ onSubmitData }) => {
             <input
               id="pro_bathrooms"
               type="number"
+              onWheel={e => e.currentTarget.blur()}
               {...registerWithChange('pro_bathrooms')}
               placeholder="욕실 수를 입력해주세요."
               className="w-full border border-gray-300 px-4 py-2 mt-2 mb-4 text-[0.8rem]"
@@ -225,6 +232,7 @@ const PostDetailForm: React.FC<PostDetailFormProps> = ({ onSubmitData }) => {
             <input
               id="pro_construction_year"
               type="number"
+              onWheel={e => e.currentTarget.blur()}
               {...registerWithChange('pro_construction_year')}
               placeholder="건축 연도를 입력해주세요."
               className="w-full border border-gray-300 px-4 py-2 mt-2 mb-4 text-[0.8rem]"

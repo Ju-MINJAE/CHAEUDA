@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 const NaverBtn = () => {
   const handleNaverLogin = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/naver/login/dev`;
+    window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/naver/login`;
   };
 
   return (

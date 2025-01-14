@@ -1,8 +1,6 @@
 'use server';
 
 import { LoginResponse, LogoutResponse, RefreshResponse } from '@/types/types';
-import { clearAuthCookies } from '@/utils/cookieUtils';
-import { getCookie } from 'cookies-next';
 import { cookies } from 'next/headers';
 
 export const sendLoginRequest = async (email: string, password: string): Promise<LoginResponse> => {
@@ -113,25 +111,25 @@ export const sendLogoutRequest = async (refresh: string): Promise<LogoutResponse
   }
 };
 
-export const sendWithdrawRequest = async (password: string) => {
+export const sendWithdrawRequest = async () => {
   try {
-    const accessToken = getCookie('accessToken');
+    const cookieStore = cookies();
+    const accessToken = cookieStore.get('accessToken');
+
     if (!accessToken) {
       throw new Error('인증 토큰이 없습니다. 다시 로그인 해주세요.');
     }
-console.log('확인', accessToken);
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/withdraw`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
-      body: JSON.stringify({ password }),
-    });
-console.log('확인', response);
-    if (!response.ok) {
-      throw new Error('API 요청 실패');
-    }
-    clearAuthCookies();
 
-    const data = await response.json();
+    const withdrawResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/withdraw`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken.value}` }
+    });
+
+    if (!withdrawResponse.ok) {
+      throw new Error('엑세스 토큰이 인증되지 않았거나 API 요청에 실패했습니다.');
+    }
+
+    const data = await withdrawResponse.json();
     return data;
   } catch (error) {
     console.error('회원 탈퇴 오류: ', error);

@@ -5,7 +5,7 @@ declare global {
     daum: {
       Postcode: new (options: { oncomplete: (data: PostcodeData) => void }) => { open: () => void };
     };
-    naver: typeof naver;
+    naver: any;
   }
 }
 
@@ -34,19 +34,46 @@ const LocationInfoForm: React.FC<LocationInfoFormProps> = ({ onSubmitData }) => 
   const [longitude, setLongitude] = useState<number>(0);
   const [addOld, setAddOld] = useState<string>('');
   const [addNew, setAddNew] = useState<string>('');
+  const [isNaverLoaded, setIsNaverLoaded] = useState<boolean>(false);
 
   useEffect(() => {
-    const existingScript = document.querySelector('script[src*="postcode.v2.js"]');
-    if (!existingScript) {
-      const script = document.createElement('script');
-      script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
-      script.async = true;
-      document.head.appendChild(script);
-    }
+    // Load Daum Postcode script
+    const loadDaumPostcode = () => {
+      const existingScript = document.querySelector('script[src*="postcode.v2.js"]');
+      if (!existingScript) {
+        const script = document.createElement('script');
+        script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+        script.async = true;
+        document.head.appendChild(script);
+      }
+    };
+
+    // Load Naver Maps script
+    const loadNaverMaps = () => {
+      const existingScript = document.querySelector('script[src*="openapi.map.naver.com"]');
+      if (!existingScript) {
+        const script = document.createElement('script');
+        script.src =
+          'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=YOUR_CLIENT_ID&submodules=geocoder';
+        script.async = true;
+        script.onload = () => setIsNaverLoaded(true);
+        document.head.appendChild(script);
+      } else {
+        setIsNaverLoaded(true);
+      }
+    };
+
+    loadDaumPostcode();
+    loadNaverMaps();
   }, []);
 
   const searchAddressToCoordinate = (address: string) => {
-    window.naver.maps.Service.geocode({ query: address }, (status, response) => {
+    if (!isNaverLoaded) {
+      console.error('Naver Maps API is not loaded yet');
+      return;
+    }
+
+    window.naver.maps.Service.geocode({ query: address }, (status: any, response: any) => {
       if (status === window.naver.maps.Service.Status.ERROR) {
         console.error('Error while fetching coordinates');
         return;
@@ -79,7 +106,10 @@ const LocationInfoForm: React.FC<LocationInfoFormProps> = ({ onSubmitData }) => 
   };
 
   const openPostcodeSearch = () => {
-    if (!window.daum || !window.daum.Postcode) return;
+    if (!window.daum || !window.daum.Postcode) {
+      console.error('Daum Postcode is not loaded yet');
+      return;
+    }
 
     const postcode = new window.daum.Postcode({
       oncomplete: (data: PostcodeData) => {
@@ -101,8 +131,8 @@ const LocationInfoForm: React.FC<LocationInfoFormProps> = ({ onSubmitData }) => 
     setDetailAddress(newDetailAddress);
 
     if (addNew && addOld && latitude && longitude) {
-      const fullNewAddress = detailAddress ? `${addNew} ${detailAddress}` : addNew;
-      const fullOldAddress = detailAddress ? `${addOld} ${detailAddress}` : addOld;
+      const fullNewAddress = newDetailAddress ? `${addNew} ${newDetailAddress}` : addNew;
+      const fullOldAddress = newDetailAddress ? `${addOld} ${newDetailAddress}` : addOld;
 
       onSubmitData({
         add_new: fullNewAddress,
@@ -141,7 +171,7 @@ const LocationInfoForm: React.FC<LocationInfoFormProps> = ({ onSubmitData }) => 
             placeholder="주소를 입력해주세요."
             className="w-full border border-gray-300 px-4 py-2 mt-2 mb-4 text-[0.8rem]"
             readOnly
-          ></input>
+          />
         </label>
         <label htmlFor="address2" className="text-[0.95rem]">
           상세주소(선택)
@@ -154,14 +184,6 @@ const LocationInfoForm: React.FC<LocationInfoFormProps> = ({ onSubmitData }) => 
             className="w-full border border-gray-300 px-4 py-2 mt-2 mb-4 text-[0.8rem]"
           />
         </label>
-        {/* <div className="mt-4 text-[0.9rem]">
-          <p>
-            <span className="font-semibold">위도:</span> {latitude}
-          </p>
-          <p>
-            <span className="font-semibold">경도:</span> {longitude}
-          </p>
-        </div> */}
       </div>
     </div>
   );

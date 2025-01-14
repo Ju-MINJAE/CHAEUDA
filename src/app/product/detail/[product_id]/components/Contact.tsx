@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 
 interface ContactProps {
   phone_number: string;
-  productId: string;
+  productId: number;
 }
 
 const formatPhoneNumber = (phone: string) => {
@@ -53,7 +53,7 @@ export const Contact = ({ phone_number, productId }: ContactProps) => {
     }
 
     try {
-      const response = await createChatRequest(accessToken, parseInt(productId, 10));
+      const response = await createChatRequest(accessToken, productId);
 
       if (response.success) {
         router.push('/chat');

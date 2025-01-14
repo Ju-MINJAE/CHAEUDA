@@ -15,7 +15,7 @@ export const DetailContent = ({ product }: DetailContentProps) => {
     <div className="space-y-6">
       <div className="space-y-2">
         <h2 className="text-2xl font-bold mt-6">{product.pro_title}</h2>
-        <p className="text-gray-400 text-sm space-x-1 pb-4">
+        <p className="text-gray-400 text-xs space-x-1 pb-4">
           등록날짜: <span>{formatDate(product.created_at)}</span>
           <span> | </span>
           <span>수정날짜: {formatDate(product.updated_at)}</span>
@@ -69,14 +69,14 @@ export const DetailContent = ({ product }: DetailContentProps) => {
 
       <div className="flex border-t pt-6">
         <span className="w-[115px] font-semibold">상세 설명</span>
-        <span>{product.description}</span>
+        <span className="text-sm">{product.description}</span>
       </div>
 
       <div className="flex border-t pt-6">
         <span className="w-[115px] font-semibold">위치정보</span>
         <div className="flex flex-col">
-          <span>{product.add_new}</span>
-          <span>{product.add_old}</span>
+          <span className="text-sm">{product.add_new}</span>
+          <span className="text-sm">{product.add_old}</span>
         </div>
       </div>
 

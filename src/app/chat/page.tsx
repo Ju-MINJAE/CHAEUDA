@@ -57,7 +57,7 @@ const ChatPage = () => {
   }
 
   return (
-    <div className="flex h-screen bg-[#f6f6f6]">
+    <div className="flex h-[600px] bg-[#f6f6f6]">
       <div
         className={`w-60 bg-white border-r border-[#d9d9d9] transition-all duration-300 ease-in-out ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'

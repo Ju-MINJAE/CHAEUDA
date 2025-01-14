@@ -30,7 +30,7 @@ interface product {
 
 interface ProductListProps {
   location: Location;
-  onProductClick: (productId: string) => void;
+  onProductClick: (productId: number) => void;
 }
 
 export const ProductList = ({ location, onProductClick }: ProductListProps) => {
@@ -42,7 +42,7 @@ export const ProductList = ({ location, onProductClick }: ProductListProps) => {
       setIsLoading(true);
       try {
         const response = await fetch(
-          `${BASEURL}/api/product/nearby?latitude=${location.latitude}&longitude=${location.longitude}`,
+          `${BASEURL}/api/product/nearby?latitude=${location.latitude}&longitude=${location.longitude}&zoom=14`,
           {
             method: 'GET',
             headers: {
@@ -79,7 +79,7 @@ export const ProductList = ({ location, onProductClick }: ProductListProps) => {
           <ProductCard
             key={product.product_id}
             product={product}
-            onClick={() => onProductClick(product.product_id.toString())}
+            onClick={() => onProductClick(product.product_id)}
           />
         ))
       ) : (

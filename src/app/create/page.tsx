@@ -5,7 +5,6 @@ import LocationInfoForm, { LocationData } from '@/containers/forms/LocationInfo'
 import PostDetailForm, { DetailData } from '@/containers/forms/PostDetail';
 import useAccessToken from '@/hooks/useAccessToken';
 import { useRouter } from 'next/navigation';
-
 import { useEffect, useState } from 'react';
 const BASEURL = process.env.NEXT_PUBLIC_BASE_URL;
 

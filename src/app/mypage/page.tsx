@@ -62,24 +62,41 @@ const MyPage = () => {
     }
   };
 
+  const handleMyPostClick = () => {
+    router.push('/mypage/myproducts');
+  };
+
   // 회원 탈퇴 요청 함수
   const handleWithdraw = async () => {
     const confirmed = confirm('정말로 회원 탈퇴를 진행하시겠습니까?');
     if (!confirmed) return;
-
     try {
-      await sendWithdrawRequest('Qq11@@');
-      console.log('회원 탈퇴 성공');
+      const withdrawResponse = await sendWithdrawRequest();
+
+      if (!withdrawResponse) {
+        console.log('탈퇴 에러');
+      }
+
+      const logoutResponse = await fetch(`/auth/logout/api`);
+
+      if (!logoutResponse.ok) {
+        console.log('에러');
+      }
+
       logout();
       router.push('/');
+      console.log('회원 탈퇴 성공');
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <div className="pt-9 pb-9 w-full h-full flex justify-center items-center">
+    <div className="pt-9 pb-9 w-full h-full flex justify-center items-center ">
       <div className="flex flex-col w-[80%] sm:w-1/3 space-y-5">
+        <div>
+          <h1 className="text-2xl font-normal text-kick">마이페이지</h1>
+        </div>
         {inputField.map(item => (
           <FormInput
             key={item.id}
@@ -97,6 +114,7 @@ const MyPage = () => {
         <button className="float-end text-kick" onClick={handleWithdraw}>
           회원 탈퇴
         </button>
+        <button onClick={handleMyPostClick}>내 매물</button>
       </div>
     </div>
   );

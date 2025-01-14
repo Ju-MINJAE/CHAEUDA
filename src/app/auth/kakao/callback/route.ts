@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { EncryptJWT } from 'jose';
 
-const DEV_API_URL = process.env.NEXT_PUBLIC_DEV_API_URL;
+const DEV_API_URL = process.env.NEXT_PUBLIC_FRONT_URL;
 const JWT_SECRET = process.env.NEXT_PUBLIC_JWT_SECRET;
 
 export const dynamic = 'force-dynamic';
@@ -10,13 +10,13 @@ export async function GET(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;
     const code = searchParams.get('code');
-console.log('확인', code);
+
     if (!code) {
       return NextResponse.json({ error: 'No code provided' }, { status: 400 });
     }
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/kakao/callback/dev?code=${code}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/kakao/callback?code=${code}`,
       {
         method: 'GET',
         headers: {
