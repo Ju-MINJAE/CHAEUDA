@@ -5,7 +5,7 @@ declare global {
     daum: {
       Postcode: new (options: { oncomplete: (data: PostcodeData) => void }) => { open: () => void };
     };
-    naver: any;
+    naver: typeof naver;
   }
 }
 
