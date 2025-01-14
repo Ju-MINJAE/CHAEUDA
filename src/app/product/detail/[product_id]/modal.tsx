@@ -4,6 +4,7 @@ import { Images } from './components/Images';
 import { Dialog } from '@radix-ui/react-dialog';
 import { Contact } from './components/Contact';
 import { Product } from '@/types/product';
+import { X } from 'lucide-react';
 const BASEURL = process.env.NEXT_PUBLIC_BASE_URL;
 
 interface ProductDetailModalProps {
@@ -40,20 +41,23 @@ export const ProductDetailModal = ({ productId, isOpen, onClose }: ProductDetail
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <div className="z-50 flex items-center justify-center p-6">
-        <div className="bg-white w-full max-w-4xl overflow-hidden">
+      <div className="fixed inset-0 flex justify-end mr-[27%] pt-[80px]">
+        <div className="relative bg-white w-[300px] overflow-y-auto px-6 pb-6 border ">
+          <div className="flex justify-end p-2">
+            <button onClick={onClose}>
+              <X size={20} className="text-gray-600 hover:text-kick" />
+            </button>
+          </div>
           {isLoading ? (
             <div className="h-[600px] animate-pulse bg-gray-100" />
           ) : product ? (
-            <>
+            <div className="bg-white">
               <Images images={product.images} video={product.video} />
               <DetailContent product={product} />
-              <Contact phone_number={product.user.phone_number} />
-            </>
-          ) : (
-            <div className="h-[600px] flex items-center justify-center">
-              정보를 불러오는데 실패했습니다.
+              <Contact phone_number={product.user.phone_number} productId={productId} />
             </div>
+          ) : (
+            <div>정보를 불러오는데 실패했습니다.</div>
           )}
         </div>
       </div>

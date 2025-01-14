@@ -16,6 +16,7 @@ export type User = {
   email: string;
   username: string;
   phone_number?: string;
+  isSocialUser?: boolean;
   iat?: number;
   exp?: number;
   is_active?: string;

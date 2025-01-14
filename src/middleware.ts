@@ -13,7 +13,7 @@ export const middleware = async (req: NextRequest) => {
     const refreshToken = req.cookies.get('refreshToken')?.value;
 
     if (refreshToken) {
-      // return NextResponse.redirect(new URL('/mypage', req.url));
+      return NextResponse.redirect(new URL('/mypage', req.url));
     }
     return NextResponse.next();
   }

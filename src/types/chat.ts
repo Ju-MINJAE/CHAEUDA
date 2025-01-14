@@ -2,7 +2,7 @@ export type Chat = {
   id: number;
   buyer: string;
   product_address: string;
-  product_id: number;
+  product_id: string;
   product_price: number;
   product_title: string;
   seller: string;

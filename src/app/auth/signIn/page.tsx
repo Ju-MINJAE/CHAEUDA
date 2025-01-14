@@ -27,7 +27,7 @@ const SignIn = () => {
 
     if (response.success) {
       if (response.user) {
-        login(response.user);
+        login({ ...response.user, isSocialUser: false });
       }
       router.push('/');
     } else {

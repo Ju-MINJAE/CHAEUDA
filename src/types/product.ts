@@ -43,6 +43,11 @@ export const Pro_heat: Record<string, string> = {
   heat_etc: '기타',
 };
 
+export interface Location {
+  latitude: number;
+  longitude: number;
+};
+
 export type MyProduct = {
   product_id: string;
   images: string;
@@ -54,3 +59,4 @@ export type MyProduct = {
   created_at: string;
   is_liked: boolean;
 };
+

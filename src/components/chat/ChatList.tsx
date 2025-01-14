@@ -1,9 +1,13 @@
-import { Chat, ChatListProps } from '@/types/chat';
+import { ChatListProps } from '@/types/chat';
 import { MessageSquare } from 'lucide-react';
-import { useState } from 'react';
 
-const ChatList: React.FC<ChatListProps> = ({ initialChats, onSelectChat, selectedChatId }) => {
-  const [chats] = useState<Chat[]>(initialChats);
+const ChatList: React.FC<ChatListProps> = ({
+  initialChats,
+  onSelectChat,
+  selectedChatId,
+  // onChatCreated
+}) => {
+  const chats = initialChats;
 
   return (
     <div className="h-full border-r border-[#d9d9d9] bg-white flex flex-col">
@@ -36,18 +40,21 @@ const ChatList: React.FC<ChatListProps> = ({ initialChats, onSelectChat, selecte
       </div>
       <div className="flex-1 overflow-y-auto">
         {chats.length === 0 ? (
-          <p className="text-[#939393] text-sm p-3 text-center">채팅 목록이 없습니다.</p>
+          <p className="text-[#939393] text-sm p-3 text-center">채팅 목록이 없습습니다.</p>
         ) : (
           <ul>
             {chats.map(chat => (
               <li key={chat.id}>
                 <button
                   onClick={() => onSelectChat(chat.id)}
-                  className={`w-full p-3 text-center transition-colors ${
-                    selectedChatId === chat.id ? 'text-kick' : 'text-[#181818] hover:bg-gray-50'
+                  className={`w-full p-3 text-left transition-colors ${
+                    selectedChatId === chat.id
+                      ? 'bg-gray-100 text-kick'
+                      : 'text-[#181818] hover:bg-gray-50'
                   }`}
                 >
-                  <span className="text-sm font-medium">{chat.product_title}</span>
+                  <span className="text-sm font-medium block">{chat.product_title}</span>
+                  <span className="text-xs text-gray-500">{chat.seller}</span>
                 </button>
               </li>
             ))}

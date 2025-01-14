@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 import { User } from '@/types/types';
 
 type AuthState = {
-  user: User | null; // 일반 로그인 상태
+  user: User | null;
   isAuthenticated: boolean;
   login: (userData: User) => void;
   logout: () => void;

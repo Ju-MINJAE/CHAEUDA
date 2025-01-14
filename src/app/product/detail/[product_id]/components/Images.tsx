@@ -32,6 +32,7 @@ export const Images = ({ images, video }: ImagesProps) => {
                 src={image}
                 alt={`Product image ${index + 1}`}
                 fill
+                sizes="100%"
                 className="object-cover"
                 priority={index === 0}
               />

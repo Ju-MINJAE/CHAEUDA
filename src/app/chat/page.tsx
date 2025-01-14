@@ -7,6 +7,7 @@ import { Chat } from '@/types/chat';
 import { fetchChatList } from '@/api/chat';
 import ChatRoom from '@/components/chat/ChatRoom';
 import useAccessToken from '@/hooks/useAccessToken';
+import { useRouter } from 'next/navigation';
 
 const ChatPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -14,6 +15,7 @@ const ChatPage = () => {
   const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const accessToken = useAccessToken();
 
@@ -40,8 +42,8 @@ const ChatPage = () => {
     setSelectedChatId(newChat.id);
   };
 
-  const handleProductMove = () => {
-    alert('연결할예정 ㄱㄷ');
+  const handleProductMove = (productId: string) => {
+    router.push(`/product/detail/${productId}`);
   };
 
   const selectedChat = chatList.find(chat => chat.id === selectedChatId);
@@ -68,7 +70,7 @@ const ChatPage = () => {
           onChatCreated={handleChatCreated}
         />
       </div>
-      <div className="flex-1 flex flex-col w-full md:w-[calc(100%-20rem)]">
+      <div className="flex-1 flex flex-col w-full md:w-[calc(100%-15rem)]">
         <header className="bg-gray-300 border-b border-[#d9d9d9] flex items-center justify-between p-4">
           <div className="flex items-center">
             <button
@@ -91,7 +93,7 @@ const ChatPage = () => {
                   <span className="text-xs mr-2">{selectedChat.product_address}</span>
                   <button
                     className="bg-gray-400 text-white font-thin text-xs px-2 py-1"
-                    onClick={handleProductMove}
+                    onClick={() => handleProductMove(selectedChat.product_id)}
                   >
                     매물 확인하기
                   </button>
@@ -103,7 +105,7 @@ const ChatPage = () => {
           </div>
         </header>
         <div className="flex-1 overflow-hidden">
-          <ChatRoom chatId={24} />
+          {selectedChatId && <ChatRoom chatId={selectedChatId} />}
         </div>
       </div>
     </div>

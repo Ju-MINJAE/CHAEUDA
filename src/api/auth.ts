@@ -23,7 +23,7 @@ export const sendLoginRequest = async (email: string, password: string): Promise
     }
 
     const data = await response.json();
-    console.log(data);
+
     cookieStore.set({
       name: 'accessToken',
       value: data.tokens.access,
@@ -119,13 +119,13 @@ export const sendWithdrawRequest = async (password: string) => {
     if (!accessToken) {
       throw new Error('인증 토큰이 없습니다. 다시 로그인 해주세요.');
     }
-
+console.log('확인', accessToken);
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/withdraw`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
       body: JSON.stringify({ password }),
     });
-
+console.log('확인', response);
     if (!response.ok) {
       throw new Error('API 요청 실패');
     }
