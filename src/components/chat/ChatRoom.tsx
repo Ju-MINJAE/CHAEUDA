@@ -131,7 +131,6 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ chatId }) => {
 
   return (
     <div className="flex flex-col h-full bg-white">
-      <div ref={messagesEndRef} />
       <div className="flex-1 overflow-y-auto px-2 py-4 space-y-4">
         {messages.map(message => (
           <div
@@ -154,7 +153,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ chatId }) => {
           </div>
         ))}
       </div>
-
+      <div ref={messagesEndRef} />
       <div className="p-4 border-t border-[#d9d9d9]">
         <div className="flex items-stretch">
           <input
