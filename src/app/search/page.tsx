@@ -30,10 +30,10 @@ const SearchPage = () => {
       const response = await fetchNearbyProducts(location.latitude, location.longitude);
       if (response.success && response.products) {
         const formattedProperties = response.products.map(product => ({
-          id: product.id,
+          id: product.product_id,
           location: { latitude: product.latitude, longitude: product.longitude },
-          title: product.title,
-          price: product.price,
+          title: product.pro_title,
+          price: product.pro_price,
         }));
         setProperties(formattedProperties);
         setSelectedLocation(location);
