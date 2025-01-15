@@ -69,7 +69,6 @@ const SocialSignUpPage = () => {
     },
   ];
 
-  // 최종 회원가입
   const onSubmit = async (data: SocialSignupFormData): Promise<void> => {
     try {
       const response = await fetch(`${BASE_URL}/api/users/signup`, {
@@ -109,7 +108,7 @@ const SocialSignUpPage = () => {
             placeholder={item.placeholder}
           />
         ))}
-        <FormButton>회원가입</FormButton>
+        <FormButton type="submit">회원가입</FormButton>
       </form>
     </div>
   );
