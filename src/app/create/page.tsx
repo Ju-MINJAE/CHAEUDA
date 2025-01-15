@@ -4,8 +4,9 @@ import ImageUploadForm, { ProductImageData } from '@/containers/forms/ImageUploa
 import LocationInfoForm, { LocationData } from '@/containers/forms/LocationInfo';
 import PostDetailForm, { DetailData } from '@/containers/forms/PostDetail';
 import useAccessToken from '@/hooks/useAccessToken';
+import { HousePlus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 const BASEURL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const CreatePost: React.FC = () => {
@@ -103,7 +104,11 @@ const CreatePost: React.FC = () => {
       <PostDetailForm onSubmitData={handlePostDetailSubmit} />
       <LocationInfoForm onSubmitData={handleLocationSubmit} />
       <div className="flex justify-end">
-        <button onClick={createPost} className="px-4 py-2 bg-kick text-white">
+        <button
+          onClick={createPost}
+          className="px-4 py-3 bg-kick text-white rounded-lg flex gap-2 hover:transition-transform hover:scale-105"
+        >
+          <HousePlus />
           매물 등록
         </button>
       </div>

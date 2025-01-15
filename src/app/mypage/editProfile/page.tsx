@@ -1,7 +1,6 @@
 'use client';
 
 import useAuthStore from '@/stores/authStore';
-import { useRouter } from 'next/navigation';
 import FormInput from '@/components/form/SocialMypageFormInput';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,12 +10,15 @@ import FormButton from '@/components/form/FormButton';
 import useUpdateProfile from '@/hooks/useUpdateProfile';
 import useFetchProfile from '@/hooks/useFetchProfile';
 
-const MyPage = () => {
+interface EditProfileProps {
+  handleToggle: () => void;
+}
+
+const EditProfile = ({ handleToggle }: EditProfileProps) => {
   const { login, user } = useAuthStore();
-  const router = useRouter();
   const { updateProfile } = useUpdateProfile();
   const { getUpdateProfile } = useFetchProfile();
-  console.log(user);
+
   const {
     register,
     handleSubmit,
@@ -85,7 +87,7 @@ const MyPage = () => {
             ? { ...result.user, isSocialUser: true }
             : { ...result.user, isSocialUser: false },
         );
-        router.back();
+        handleToggle();
       }
     } catch (error) {
       console.error('회원정보 수정 실패:', error);
@@ -93,54 +95,55 @@ const MyPage = () => {
   };
 
   return (
-    <div className="pt-9 pb-9 w-full h-full flex justify-center items-center">
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-[80%] sm:w-1/3 space-y-5">
-        <div>
-          <h1 className="text-2xl font-normal text-kick">마이페이지 수정</h1>
-        </div>
-        <div className="flex flex-col space-y-1.5">
-          <label htmlFor="email">이메일 주소</label>
-          <input
-            id="email"
-            type="email"
-            defaultValue={(user && user.email) || ''}
-            className="border border-gray-400 w-full h-9 text-4 p-2"
-            disabled={true}
-          />
-        </div>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col w-60 sm:w-96 h-full p-4 space-y-5 justify-center"
+    >
+      <div>
+        <h1 className="text-2xl font-normal text-kick">마이페이지 수정</h1>
+      </div>
+      <div className="flex flex-col space-y-1.5">
+        <label htmlFor="email">이메일 주소</label>
+        <input
+          id="email"
+          type="email"
+          defaultValue={(user && user.email) || ''}
+          className="border border-gray-400 w-full h-9 text-4 p-2"
+          disabled={true}
+        />
+      </div>
 
-        {inputField.map(item => (
-          <FormInput
-            key={item.id}
-            name={item.name as keyof EditMypageFormData}
-            label={item.label}
-            id={item.id}
-            type={item.type}
-            register={register}
-            errorMessage={errors[item.name as keyof EditMypageFormData]?.message}
-            placeholder={item.placeholder}
-          />
-        ))}
-        {user?.isSocialUser ? null : (
-          <>
-            {passwordField.map(item => (
-              <FormInput
-                key={item.id}
-                name={item.name as keyof EditMypageFormData}
-                label={item.label}
-                id={item.id}
-                type={item.type}
-                register={register}
-                errorMessage={errors[item.name as keyof EditMypageFormData]?.message}
-                placeholder={item.placeholder}
-              />
-            ))}
-          </>
-        )}
-        <FormButton>정보 수정 완료</FormButton>
-      </form>
-    </div>
+      {inputField.map(item => (
+        <FormInput
+          key={item.id}
+          name={item.name as keyof EditMypageFormData}
+          label={item.label}
+          id={item.id}
+          type={item.type}
+          register={register}
+          errorMessage={errors[item.name as keyof EditMypageFormData]?.message}
+          placeholder={item.placeholder}
+        />
+      ))}
+      {user?.isSocialUser ? null : (
+        <>
+          {passwordField.map(item => (
+            <FormInput
+              key={item.id}
+              name={item.name as keyof EditMypageFormData}
+              label={item.label}
+              id={item.id}
+              type={item.type}
+              register={register}
+              errorMessage={errors[item.name as keyof EditMypageFormData]?.message}
+              placeholder={item.placeholder}
+            />
+          ))}
+        </>
+      )}
+      <FormButton onClick={handleToggle}>정보 수정 완료</FormButton>
+    </form>
   );
 };
 
-export default MyPage;
+export default EditProfile;

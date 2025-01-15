@@ -7,15 +7,16 @@ import { Chat } from '@/types/chat';
 import { fetchChatList } from '@/api/chat';
 import ChatRoom from '@/components/chat/ChatRoom';
 import useAccessToken from '@/hooks/useAccessToken';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const ChatPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [chatList, setChatList] = useState<Chat[]>([]);
-  const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const selectedChatId = searchParams.get('id') ? Number(searchParams.get('id')) : null;
 
   const accessToken = useAccessToken();
 
@@ -26,6 +27,11 @@ const ChatPage = () => {
           const chats = await fetchChatList(accessToken);
           setChatList(chats);
           setIsLoading(false);
+
+          // If no chat is selected and we have chats, select the first one
+          if (!selectedChatId && chats.length > 0) {
+            router.push(`/chat?id=${chats[0].id}`);
+          }
         } catch (err) {
           console.error(err);
           setError('채팅 목록을 가져오지 못했습니다.');
@@ -35,11 +41,11 @@ const ChatPage = () => {
 
       fetchChats();
     }
-  }, [accessToken]);
+  }, [accessToken, router, selectedChatId]);
 
   const handleChatCreated = (newChat: Chat) => {
     setChatList(prevChats => [newChat, ...prevChats]);
-    setSelectedChatId(newChat.id);
+    router.push(`/chat?id=${newChat.id}`);
   };
 
   const handleProductMove = (productId: string) => {
@@ -49,15 +55,17 @@ const ChatPage = () => {
   const selectedChat = chatList.find(chat => chat.id === selectedChatId);
 
   if (isLoading) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    return <div className="flex justify-center items-center h-screen w-full">Loading...</div>;
   }
 
   if (error) {
-    return <div className="flex justify-center items-center h-screen text-red-500">{error}</div>;
+    return (
+      <div className="flex justify-center items-center h-screen text-red-500 w-full">{error}</div>
+    );
   }
 
   return (
-    <div className="flex h-[600px] bg-[#f6f6f6]">
+    <div className="flex h-[600px] bg-[#f6f6f6] w-full">
       <div
         className={`w-60 bg-white border-r border-[#d9d9d9] transition-all duration-300 ease-in-out ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
@@ -65,7 +73,6 @@ const ChatPage = () => {
       >
         <ChatList
           initialChats={chatList}
-          onSelectChat={setSelectedChatId}
           selectedChatId={selectedChatId}
           onChatCreated={handleChatCreated}
         />

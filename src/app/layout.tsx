@@ -7,6 +7,9 @@ import Footer from '@/components/Footer';
 export const metadata: Metadata = {
   title: '채우다',
   description: '전국 빈집을 채워보자',
+  icons: {
+    icon: '/icon.svg',
+  },
 };
 
 const pretendard = localFont({
@@ -22,11 +25,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={`${pretendard.variable}`}>
-      <body className={`${pretendard.className} flex flex-col min-h-screen`}>
+    <html lang="ko" className={`${pretendard.variable} w-full h-full`}>
+      <body className={`${pretendard.className} flex flex-col w-full h-full overflow-hidden`}>
         <NavContainer />
-        <main className="flex-1 pt-[80px]">{children}</main>
-        <Footer />
+        <div className="flex flex-col felx-1 overflow-scroll w-full h-full">
+          <main className="flex flex-1 w-full">{children}</main>
+          <Footer />
+        </div>
       </body>
     </html>
   );

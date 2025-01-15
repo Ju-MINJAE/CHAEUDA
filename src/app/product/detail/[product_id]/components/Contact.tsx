@@ -72,11 +72,11 @@ export const Contact = ({ phone_number, productId }: ContactProps) => {
     <div className="border-t">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full p-4 flex justify-between items-center bg-red-500 text-white hover:bg-red-600 transition-colors"
+        className="w-full p-4 flex justify-center items-center bg-red-500 text-white hover:bg-red-600 transition-colors"
         aria-expanded={isOpen}
         aria-controls="contact-details"
       >
-        <span className="font-medium">문의</span>
+        <span className="font-medium flex-1">문의</span>
         <ChevronDown className={`w-5 h-5 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 

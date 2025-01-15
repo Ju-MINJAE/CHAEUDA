@@ -71,7 +71,7 @@ const PostDetailForm: React.FC<PostDetailFormProps> = ({ onSubmitData }) => {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 text-[0.9rem]">
       <h2 className="text-lg font-semibold mb-4">매물 정보</h2>
       <div className="space-y-5 text-[0.9rem]">
-        <label htmlFor="pro_title" className="text-[0.95rem]">
+        <label htmlFor="pro_title" className="text-[0.95rem] font-semibold text-gray-700">
           제목
           <input
             id="pro_title"
@@ -81,7 +81,7 @@ const PostDetailForm: React.FC<PostDetailFormProps> = ({ onSubmitData }) => {
             className="w-full border border-gray-300 px-4 py-2 mt-2 mb-4 text-[0.8rem]"
           />
         </label>
-        <label htmlFor="pro_price" className="text-[0.95rem]">
+        <label htmlFor="pro_price" className="text-[0.95rem] font-semibold text-gray-700">
           매매 ∙ 관리비(선택)
           <div className="grid grid-cols-2 gap-4 mt-2 mb-4 text-[0.8rem]">
             <input
@@ -103,7 +103,7 @@ const PostDetailForm: React.FC<PostDetailFormProps> = ({ onSubmitData }) => {
           </div>
         </label>
         <div>
-          <fieldset className="text-[0.95rem]">
+          <fieldset className="text-[0.95rem] font-semibold text-gray-700">
             <legend>건물 유형</legend>
             <div className="flex gap-3 mt-2 text-[0.8rem]">
               {[
@@ -136,31 +136,31 @@ const PostDetailForm: React.FC<PostDetailFormProps> = ({ onSubmitData }) => {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <label htmlFor="pro_supply_a" className="text-[0.95rem]">
-            평수(공급면적)
+          <label htmlFor="pro_supply_a" className="text-[0.95rem] font-semibold text-gray-700">
+            공급면적(㎡)
             <input
               id="pro_supply_a"
               type="number"
               onWheel={e => e.currentTarget.blur()}
               {...registerWithChange('pro_supply_a')}
-              placeholder="평수를 입력해주세요."
+              placeholder="면적을 입력해주세요."
               className="w-full border border-gray-300 px-4 py-2 mt-2 mb-4 text-[0.8rem]"
             />
           </label>
-          <label htmlFor="pro_site_a" className="text-[0.95rem]">
-            부지면적
+          <label htmlFor="pro_site_a" className="text-[0.95rem] font-semibold text-gray-700">
+            부지면적(㎡)
             <input
               id="pro_site_a"
               type="number"
               onWheel={e => e.currentTarget.blur()}
               {...registerWithChange('pro_site_a')}
-              placeholder="평수를 입력해주세요."
+              placeholder="면적을 입력해주세요."
               className="w-full border border-gray-300 px-4 py-2 mt-2 mb-4 text-[0.8rem]"
             />
           </label>
         </div>
         <div className="grid grid-cols-3 gap-4 m-0">
-          <label htmlFor="pro_floor" className="text-[0.95rem]">
+          <label htmlFor="pro_floor" className="text-[0.95rem] font-semibold text-gray-700">
             층 수
             <input
               id="pro_floor"
@@ -171,7 +171,7 @@ const PostDetailForm: React.FC<PostDetailFormProps> = ({ onSubmitData }) => {
               className="w-full border border-gray-300 px-4 py-2 mt-2 mb-4 text-[0.8rem]"
             />
           </label>
-          <label htmlFor="pro_rooms" className="text-[0.95rem]">
+          <label htmlFor="pro_rooms" className="text-[0.95rem] font-semibold text-gray-700">
             방 수
             <input
               id="pro_rooms"
@@ -182,7 +182,7 @@ const PostDetailForm: React.FC<PostDetailFormProps> = ({ onSubmitData }) => {
               className="w-full border border-gray-300 px-4 py-2 mt-2 mb-4 text-[0.8rem]"
             />
           </label>
-          <label htmlFor="pro_bathrooms" className="text-[0.95rem]">
+          <label htmlFor="pro_bathrooms" className="text-[0.95rem] font-semibold text-gray-700">
             욕실 수
             <input
               id="pro_bathrooms"
@@ -195,7 +195,7 @@ const PostDetailForm: React.FC<PostDetailFormProps> = ({ onSubmitData }) => {
           </label>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <fieldset className="text-[0.95rem]">
+          <fieldset className="text-[0.95rem] font-semibold text-gray-700">
             <legend>난방 방식</legend>
             <div className="flex gap-3 mt-2 text-[0.8rem]">
               {[
@@ -227,7 +227,10 @@ const PostDetailForm: React.FC<PostDetailFormProps> = ({ onSubmitData }) => {
             </div>
           </fieldset>
 
-          <label htmlFor="pro_construction_year" className="text-[0.95rem]">
+          <label
+            htmlFor="pro_construction_year"
+            className="text-[0.95rem] font-semibold text-gray-700"
+          >
             건축 연도
             <input
               id="pro_construction_year"
@@ -239,13 +242,13 @@ const PostDetailForm: React.FC<PostDetailFormProps> = ({ onSubmitData }) => {
             />
           </label>
         </div>
-        <label htmlFor="description" className="text-[0.95rem]">
+        <label htmlFor="description" className="text-[0.95rem] font-semibold text-gray-700">
           상세 설명
           <textarea
             id="description"
             {...registerWithChange('description')}
             placeholder="집에 대한 상세 설명을 입력해주세요."
-            className="w-full border border-gray-300 px-4 py-2 mt-2 text-[0.8rem]"
+            className="w-full border border-gray-300 px-4 py-2 mt-2 text-[0.8rem] min-h-28 resize-none"
           />
         </label>
       </div>

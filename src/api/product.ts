@@ -33,6 +33,7 @@ export const fetchMyProducts = async (accessToken: string) => {
     if (!response.ok) throw new Error('API 요청 실패');
 
     const data = await response.json();
+    console.log(data);
     return data;
   } catch (error) {
     console.error('나의 매물 조회 오류: ', error);
@@ -69,6 +70,29 @@ export const fetchNearbyProducts = async (
     return {
       success: false,
       message: error instanceof Error ? error.message : '매물 조회 중 오류가 발생하였습니다.',
+    };
+  }
+};
+
+export const deleteRequest = async (productId: number, accessToken: string) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/product/delete/${productId}`,
+      {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+      },
+    );
+
+    if (!response.ok) throw new Error('API 요청 실패');
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('매물 삭제 오류: ', error);
+    return {
+      success: false,
+      message: '매물 삭제 중 오류가 발생하였습니다.',
     };
   }
 };

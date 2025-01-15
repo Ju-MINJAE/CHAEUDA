@@ -30,9 +30,7 @@ export const createChatRequest = async (accessToken: string, product_id: number)
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/chat/create`, {
       method: 'POST',
       headers: {
-        Accept: 'application/json',
         Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ product_id }),
     });

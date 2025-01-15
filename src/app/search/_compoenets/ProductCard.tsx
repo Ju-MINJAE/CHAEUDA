@@ -29,13 +29,26 @@ interface ProductCardProps {
   onClick: () => void;
 }
 
+function formatPrice(price: number): string {
+  if (price >= 100000000) {
+    return `${price / 100000000}억`;
+  } else if (price >= 10000) {
+    return `${price / 10000}만`;
+  } else {
+    return price.toLocaleString();
+  }
+}
+
 export const ProductCard = ({ product, onClick }: ProductCardProps) => {
   const formatDate = (dateString: string) => {
     return dateString.slice(0, 10).replace(/-/g, '/');
   };
 
   return (
-    <div onClick={onClick} className="w-full cursor-pointer border overflow-hidden relative">
+    <div
+      onClick={onClick}
+      className="w-full rounded-lg cursor-pointer shadow-md border overflow-hidden relative transition-transform duration-300 hover:-translate-y-1"
+    >
       <div className="relative h-48">
         <Image
           src={product.images}
@@ -47,13 +60,15 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
           style={{ zIndex: 1 }}
         />
       </div>
-      <div className="flex flex-col p-2 relative">
-        <h3 className="font-bold">{product.pro_price.toLocaleString()}원</h3>
+      <div className="flex flex-col p-3 relative">
+        <h3 className="font-bold">{formatPrice(product.pro_price)}</h3>
         <p className="text-sm mt-1">{product.add_new}</p>
-        <div className="flex justify-between items-center">
-          <p className="text-sm mt-1">
-            {Pro_type[product.pro_type]} | {product.pro_supply_a}㎡
-          </p>
+        <div className="flex justify-between items-center flex-wrap lg:flex-nowrap">
+          <div className="text-sm mt-1 flex flex-wrap md:flex-nowrap">
+            <p className="mr-1">{Pro_type[product.pro_type]} </p>
+            <p> | {product.pro_supply_a}㎡</p>
+          </div>
+
           <p className="text-xs mt-1 text-gray-400">등록일: {formatDate(product.created_at)}</p>
         </div>
       </div>

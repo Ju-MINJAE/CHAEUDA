@@ -139,9 +139,9 @@ const SearchAndFilterMap = ({
 
   return (
     <div className="space-y-3">
-      <div className="flex space-x-3">
+      <div className="flex space-x-3 ml-2">
         <select
-          className="w-[140px] p-[10px] text-[0.8rem] bg-[#f4f4f4]"
+          className="w-[140px] p-3 text-[0.8rem] bg-[#f4f4f4] shadow-sm border"
           onChange={e => handleCategoryChange(e.target.value)}
           value={selectedCategory}
         >
@@ -153,7 +153,7 @@ const SearchAndFilterMap = ({
         </select>
 
         <select
-          className="w-[140px] p-[10px] text-[0.8rem] bg-[#f4f4f4]"
+          className="w-[140px] p-3 text-[0.8rem] bg-[#f4f4f4] shadow-sm border"
           onChange={e => handleSecondRegionChange(e.target.value)}
           value={selectedSecondRegion}
         >
@@ -165,7 +165,7 @@ const SearchAndFilterMap = ({
           ))}
         </select>
       </div>
-      <div ref={mapRef} className="w-full h-[650px] relative">
+      <div ref={mapRef} className="w-full h-[650px] relative shadow-sm">
         {isLoading && (
           <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
             <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>

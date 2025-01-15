@@ -10,8 +10,8 @@ import SearchModal from '@/components/modals/SearchModal';
 
 const NaverMap = dynamic(() => import('../components/NaverMap'), {
   loading: () => (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="flex flex-col items-center">
+    <div className="flex w-full justify-center items-center h-screen bg-gray-100">
+      <div className="flex w-full flex-col items-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid"></div>
         <p className="mt-4 text-lg text-gray-600">로딩 중입니다...</p>
       </div>
@@ -53,7 +53,7 @@ const Home = () => {
   };
 
   return (
-      <div className="relative">
+      <div className="relative w-full">
         <NaverMap
           topSearchInput={topSearchInput}
           searchQuery={searchQuery}

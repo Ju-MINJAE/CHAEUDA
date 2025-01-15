@@ -90,8 +90,12 @@ const SocialSignUpPage = () => {
   };
 
   return (
-    <div className="pt-9 pb-9 w-full h-full flex justify-center items-center">
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-[80%] sm:w-1/3 space-y-5">
+    <div className="pt-9 pb-9 w-full h-full flex flex-col justify-center items-center">
+      <h1 className="text-2xl font-bold text-center text-gray-800">회원가입</h1>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col max-w-md p-6 sm:w-1/3 space-y-5"
+      >
         {inputField.map(item => (
           <FormInput
             key={item.id}

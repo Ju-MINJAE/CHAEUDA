@@ -6,6 +6,7 @@ import { Location } from '@/types/product';
 import { fetchNearbyProducts } from '@/api/product';
 import SearchAndFilterMap from './_compoenets/SearchAndFilterMap';
 import { ProductList } from './_compoenets/ProductList';
+import { SecondSelectRegion } from '@/containers/forms/SelectRegion';
 
 interface Property {
   id: number;
@@ -21,8 +22,7 @@ const SearchPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleRegionSelect = async (location: Location) => {
-    setSelectedLocation(location);
+  const fetchProperties = async (location: Location) => {
     setIsLoading(true);
     setError(null);
 
@@ -36,6 +36,7 @@ const SearchPage = () => {
           price: product.price,
         }));
         setProperties(formattedProperties);
+        setSelectedLocation(location);
       } else {
         setError(response.message || '매물을 불러오는데 실패했습니다.');
         setProperties([]);
@@ -48,18 +49,34 @@ const SearchPage = () => {
     }
   };
 
+  useEffect(() => {
+    // Fetch properties with default location when component mounts
+    const defaultLocation = SecondSelectRegion.default[0];
+    fetchProperties({
+      latitude: defaultLocation.latitude,
+      longitude: defaultLocation.longitude,
+    });
+  }, []);
+
+  const handleRegionSelect = (location: Location) => {
+    fetchProperties(location);
+  };
+
   return (
-    <div className="flex p-5">
+    <div className="flex w-full p-5">
       <div className="flex-1">
         <SearchAndFilterMap
           onRegionSelect={handleRegionSelect}
-          initialCenter={{ lat: 37.683834, lng: 126.776557 }}
+          initialCenter={{
+            lat: selectedLocation?.latitude || 37.683834,
+            lng: selectedLocation?.longitude || 126.776557,
+          }}
           initialZoom={14}
           properties={properties}
           isLoading={isLoading}
         />
       </div>
-      <div className="w-[25%] ml-[20px] flex flex-col items-center justify-start">
+      <div className="w-[25%] ml-[20px] flex items-center justify-center">
         {error && <div className="text-red-500 mb-4">{error}</div>}
         {selectedProductId && (
           <ProductDetailModal

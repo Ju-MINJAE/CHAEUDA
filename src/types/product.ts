@@ -2,10 +2,11 @@ export interface User {
   id: number;
   username: string;
   phone_number: string;
+  email: string;
 }
 
 export interface Product {
-  product_id: string;
+  product_id: number;
   user: User;
   images: string[];
   video: string | null;
@@ -73,4 +74,3 @@ export type NearbyProductsResponse = {
   message?: string;
   products?: SearchProduct[];
 };
-

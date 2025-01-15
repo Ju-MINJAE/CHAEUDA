@@ -20,7 +20,7 @@ export const DetailContent = ({ product }: DetailContentProps) => {
           <span> | </span>
           <span>수정날짜: {formatDate(product.updated_at)}</span>
         </p>
-        <div className="border-t pt-6">
+        <div className="border-t pt-6 space-y-2">
           <div className="flex">
             <span className="w-[115px] font-semibold">매매</span>
             <span>{product.pro_price.toLocaleString()}원</span>
@@ -34,13 +34,17 @@ export const DetailContent = ({ product }: DetailContentProps) => {
         </div>
       </div>
 
-      <div className="border-t pt-6">
+      <div className="border-t pt-6 space-y-2">
         <div className="flex">
           <span className="w-[115px] font-semibold">건물 유형</span>
           <span>{Pro_type[product.pro_type]}</span>
         </div>
         <div className="flex">
-          <span className="w-[115px] font-semibold">평수(공급면적)</span>
+          <span className="w-[115px] font-semibold">건축연도</span>
+          <span>{product.pro_construction_year}년</span>
+        </div>
+        <div className="flex">
+          <span className="w-[115px] font-semibold">공급면적</span>
           <span>{product.pro_supply_a}㎡</span>
         </div>
         <div className="flex">
@@ -61,14 +65,10 @@ export const DetailContent = ({ product }: DetailContentProps) => {
           <span className="w-[115px] font-semibold">난방 방식</span>
           <span>{Pro_heat[product.pro_heat]}</span>
         </div>
-        <div className="flex">
-          <span className="w-[115px] font-semibold">건축연도</span>
-          <span>{product.pro_construction_year}년</span>
-        </div>
       </div>
 
-      <div className="flex border-t pt-6">
-        <span className="w-[115px] font-semibold">상세 설명</span>
+      <div className="border-t pt-6 space-y-2">
+        <span className="w-[115px] block mb-3 font-semibold">상세 설명</span>
         <span className="text-sm">{product.description}</span>
       </div>
 
