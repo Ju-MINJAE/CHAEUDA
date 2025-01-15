@@ -4,11 +4,10 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { sendWithdrawRequest } from '@/api/auth';
 import useAuthStore from '@/stores/authStore';
-import Profile from './profile/page';
+import Profile from '../../components/mypage/Profile';
 import LikeProductsPage from './likeproducts/page';
 import MyProductsPage from './myproducts/page';
-// import ChattingList from './chattingList/page';
-import { Heart, House, MessageSquareIcon, Settings } from 'lucide-react';
+import { Heart, House, Settings } from 'lucide-react';
 
 const MyPage = () => {
   const router = useRouter();
@@ -19,7 +18,6 @@ const MyPage = () => {
     Profile: <Profile />,
     likeproducts: <LikeProductsPage />,
     myProductsPage: <MyProductsPage />,
-    // chattingList: <ChattingList />,
   };
 
   const handleWithdraw = async () => {
@@ -44,10 +42,6 @@ const MyPage = () => {
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const handleChatClick = () => {
-    router.push('/chat');
   };
 
   return (
@@ -75,10 +69,6 @@ const MyPage = () => {
             >
               <House />
               나의 매물
-            </li>
-            <li onClick={handleChatClick} className="cursor-pointer flex gap-2 hover:text-kick">
-              <MessageSquareIcon />
-              채팅 목록
             </li>
           </ul>
           <span

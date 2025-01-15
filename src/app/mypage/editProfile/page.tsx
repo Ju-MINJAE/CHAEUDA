@@ -5,7 +5,7 @@ import FormInput from '@/components/form/SocialMypageFormInput';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EditMypageFormData, EditMypageSchema } from '@/app/auth/schemas/EditMypageSchema';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import FormButton from '@/components/form/FormButton';
 import useUpdateProfile from '@/hooks/useUpdateProfile';
 import useFetchProfile from '@/hooks/useFetchProfile';
@@ -18,6 +18,7 @@ const EditProfile = ({ handleToggle }: EditProfileProps) => {
   const { login, user } = useAuthStore();
   const { updateProfile } = useUpdateProfile();
   const { getUpdateProfile } = useFetchProfile();
+  const [isEditing, setIsEditing] = useState<boolean>(true);
 
   const {
     register,
@@ -72,7 +73,7 @@ const EditProfile = ({ handleToggle }: EditProfileProps) => {
   useEffect(() => {
     setValue('username', user?.username || '');
     setValue('phone_number', user?.phone_number || '');
-  }, [user]);
+  }, [user, setValue]);
 
   const onSubmit = async (data: EditMypageFormData): Promise<void> => {
     try {
@@ -87,12 +88,27 @@ const EditProfile = ({ handleToggle }: EditProfileProps) => {
             ? { ...result.user, isSocialUser: true }
             : { ...result.user, isSocialUser: false },
         );
-        handleToggle();
+        // handleToggle();
+        setIsEditing(false);
       }
     } catch (error) {
       console.error('회원정보 수정 실패:', error);
     }
   };
+
+  // const handleToggle = () => {
+  //   setIsEditing(!isEditing);
+  // };
+
+  if (!isEditing) {
+    return (
+      <div className="flex flex-col w-60 sm:w-96 h-full p-4 space-y-5 justify-center">
+        <h1 className="text-2xl font-normal text-kick">마이페이지</h1>
+        <p>회원 정보가 성공적으로 수정되었습니다.</p>
+        <FormButton onClick={handleToggle}>다시 수정하기</FormButton>
+      </div>
+    );
+  }
 
   return (
     <form
@@ -141,7 +157,7 @@ const EditProfile = ({ handleToggle }: EditProfileProps) => {
           ))}
         </>
       )}
-      <FormButton onClick={handleToggle}>정보 수정 완료</FormButton>
+      <FormButton type="submit">정보 수정 완료</FormButton>
     </form>
   );
 };
