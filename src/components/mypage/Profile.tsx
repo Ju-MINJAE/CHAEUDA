@@ -11,15 +11,7 @@ const MyPage = () => {
     setIsEditing(!isEditing);
   };
 
-  return (
-    <>
-      {isEditing ? (
-        <EditProfile handleToggle={handleToggle} />
-      ) : (
-        <ViewProfile handleToggle={handleToggle} />
-      )}
-    </>
-  );
+  return <>{isEditing ? <EditProfile /> : <ViewProfile handleToggle={handleToggle} />}</>;
 };
 
 export default MyPage;

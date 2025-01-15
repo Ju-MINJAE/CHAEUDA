@@ -10,11 +10,11 @@ import FormButton from '@/components/form/FormButton';
 import useUpdateProfile from '@/hooks/useUpdateProfile';
 import useFetchProfile from '@/hooks/useFetchProfile';
 
-interface EditProfileProps {
-  handleToggle: () => void;
-}
+// interface EditProfileProps {
+//   handleToggle: () => void;
+// }
 
-const EditProfile = ({ handleToggle }: EditProfileProps) => {
+const EditProfile = () => {
   const { login, user } = useAuthStore();
   const { updateProfile } = useUpdateProfile();
   const { getUpdateProfile } = useFetchProfile();
@@ -96,9 +96,9 @@ const EditProfile = ({ handleToggle }: EditProfileProps) => {
     }
   };
 
-  // const handleToggle = () => {
-  //   setIsEditing(!isEditing);
-  // };
+  const handleToggle = () => {
+    setIsEditing(!isEditing);
+  };
 
   if (!isEditing) {
     return (
