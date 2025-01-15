@@ -28,12 +28,20 @@ const Home = () => {
   const searchParams = useSearchParams();
   const userData = searchParams.get('user');
 
+  const debounce = (func: (...args: any[]) => void, delay: number) => {
+    let timeoutId: NodeJS.Timeout;
+    return (...args: any[]) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func(...args), delay);
+    };
+  };
+
   useEffect(() => {
     const fetchDecryptedUser = async () => {
       if (userData) {
         const decryptedUserData = await jwtDecrypt(userData);
         if (decryptedUserData) {
-          login({...decryptedUserData, isSocialUser: true});
+          login({ ...decryptedUserData, isSocialUser: true });
         } else {
           console.error('사용자 정보를 복호화할 수 없습니다.');
         }
@@ -48,23 +56,15 @@ const Home = () => {
     setTopSearchInput(true);
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
   };
 
   return (
-      <div className="relative w-full">
-        <NaverMap
-          topSearchInput={topSearchInput}
-          searchQuery={searchQuery}
-          handleSearchChange={handleSearchChange}
-        />
-        <SearchModal
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          handleSearchChange={handleSearchChange}
-        />
-      </div>
+    <div className="relative w-full">
+      <NaverMap topSearchInput={topSearchInput} searchQuery={searchQuery} onSearch={handleSearch} />
+      <SearchModal isOpen={isModalOpen} onClose={handleCloseModal} onSearch={handleSearch} />
+    </div>
   );
 };
 

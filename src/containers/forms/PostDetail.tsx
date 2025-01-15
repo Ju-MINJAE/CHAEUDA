@@ -96,7 +96,6 @@ const PostDetailForm: React.FC<PostDetailFormProps> = ({ onSubmitData }) => {
               id="management_cost"
               type="number"
               onWheel={e => e.currentTarget.blur()}
-              {...registerWithChange('management_cost')}
               placeholder="관리비용을 입력해주세요."
               className="border border-gray-300 px-4 py-2"
             />

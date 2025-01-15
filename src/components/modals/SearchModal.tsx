@@ -6,11 +6,12 @@ import { createPortal } from 'react-dom';
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
-  handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearch: (query: string) => void;
 }
 
-const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, handleSearchChange }) => {
+const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSearch }) => {
   const [mounted, setMounted] = useState<boolean>(false);
+  const [searchValue, setSearchValue] = useState<string>('');
 
   useEffect(() => {
     setMounted(true);
@@ -25,6 +26,17 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, handleSearch
     };
   }, [isOpen]);
 
+  const handleLocalSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onSearch(searchValue);
+      onClose();
+    }
+  };
+
   if (!mounted || !isOpen) return null;
 
   return createPortal(
@@ -32,7 +44,9 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, handleSearch
       <div className="relative w-4/5 max-w-xl p-4">
         <input
           type="text"
-          onChange={handleSearchChange}
+          value={searchValue}
+          onChange={handleLocalSearchChange}
+          onKeyDown={handleKeyDown}
           placeholder="찾으시는 지역명을 검색하세요. (예: 시/도, 구/군)"
           className="w-full h-[60px] border-2 border-black p-5 focus:outline-none inset-x-0 focus:ring-2 focus:ring-blue-500"
         />

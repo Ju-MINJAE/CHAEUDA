@@ -45,7 +45,7 @@ export default function MyProductsPage() {
 
       fetchProducts();
     }
-  }, [accessToken]);
+  }, [accessToken, router]);
 
   if (isLoading) {
     return (

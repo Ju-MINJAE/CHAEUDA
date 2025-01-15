@@ -27,8 +27,6 @@ export default function ProductDetailPage({ params }: { params: { product_id: st
         const response = await fetch(`${BASEURL}/api/product/detail/${params.product_id}`);
         if (!response.ok) throw new Error('Failed to fetch product');
         const data = await response.json();
-        console.log('user:', user);
-        console.log(data.product);
         setProduct(data.product);
       } catch (error) {
         console.error('Error fetching product:', error);
@@ -56,7 +54,8 @@ export default function ProductDetailPage({ params }: { params: { product_id: st
       const response = await deleteRequest(product.product_id, accessToken);
       if (response.success) {
         alert('매물이 성공적으로 삭제되었습니다.');
-        router.push('/mypage/myproducts');
+        // router.push('/mypage?view=myProducts');
+        router.push('/mypage');
       } else {
         alert(response.message || '삭제에 실패했습니다.');
       }

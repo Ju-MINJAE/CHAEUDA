@@ -61,10 +61,12 @@ export type MyProduct = {
   is_liked: boolean;
 };
 
-type SearchProduct = {
-  id: number;
-  title: string;
-  price: number;
+export type SearchProduct = {
+  product_id: number;
+  pro_title: string;
+  pro_price: number;
+  pro_type: string;
+  pro_supply_a: number;
   latitude: number;
   longitude: number;
 };
