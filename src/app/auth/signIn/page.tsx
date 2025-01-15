@@ -67,7 +67,9 @@ const SignIn = () => {
             />
           </div>
           {errorMessages && <p className="mb-2 text-sm text-red-500">{errorMessages}</p>}
-          <FormButton>{loading ? '로그인 중...' : '로그인'}</FormButton>
+          <FormButton type="submit" disabled={loading}>
+            {loading ? '로그인 중...' : '로그인'}
+          </FormButton>
         </form>
         <div className="mt-4 text-center">
           <p className="text-sm text-gray-600">
