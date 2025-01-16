@@ -1,7 +1,7 @@
 'use client';
 
 import { fetchNearbyProducts } from '@/api/product';
-import { SearchProduct } from '@/types/product';
+import { Pro_type, SearchProduct } from '@/types/product';
 import { useEffect, useRef, useState } from 'react';
 
 declare global {
@@ -28,6 +28,7 @@ const NaverMap = ({
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<any>(null);
   const [markers, setMarkers] = useState<any[]>([]);
+  const [selectedMarker, setSelectedMarker] = useState<any>(null);
   const [infoWindow, setInfoWindow] = useState<any>(null);
   const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
 
@@ -48,14 +49,14 @@ const NaverMap = ({
 
       const newInfoWindow = new window.naver.maps.InfoWindow({
         content: '',
-        maxWidth: 300,
-        backgroundColor: '#eee',
+        maxWidth: 350,
+        backgroundColor: '#ffffff',
         borderColor: '#F22929',
-        borderWidth: 2,
-        anchorSize: new window.naver.maps.Size(30, 30),
+        borderWidth: 3,
+        anchorSize: new window.naver.maps.Size(20, 0),
         anchorSkew: true,
-        anchorColor: '#eee',
-        pixelOffset: new window.naver.maps.Point(20, -20),
+        anchorColor: '#ffffff',
+        pixelOffset: new window.naver.maps.Point(-45, -20),
       });
 
       setInfoWindow(newInfoWindow);
@@ -142,15 +143,21 @@ const NaverMap = ({
 
       window.naver.maps.Event.addListener(marker, 'click', () => {
         if (infoWindow) {
-          infoWindow.setContent(`
-            <div style="padding: 10px;">
-              <h3 style="margin-bottom: 5px;">${product.pro_title}</h3>
-              <p>가격: ${product.pro_price.toLocaleString()}원</p>
-              <p>유형: ${product.pro_type}</p>
-              <p>면적: ${product.pro_supply_a}㎡</p>
-            </div>
-          `);
-          infoWindow.open(map, marker);
+          if (selectedMarker === marker) {
+            infoWindow.close();
+            setSelectedMarker(null);
+          } else {
+            infoWindow.setContent(`
+              <div style="padding: 13px;">
+                <h3 style="margin-bottom: 5px; font-weight: bold;">${product.pro_title}</h3>
+                <p style="font-size: 14px; margin-left: 3px;">가격: ${product.pro_price.toLocaleString()}원</p>
+                <p style="font-size: 14px; margin-left: 3px;">유형: ${Pro_type[product.pro_type]}</p>
+                <p style="font-size: 14px; margin-left: 3px;">면적: ${product.pro_supply_a}㎡</p>
+              </div>
+            `);
+            infoWindow.open(map, marker);
+            setSelectedMarker(marker);
+          }
         }
       });
 
