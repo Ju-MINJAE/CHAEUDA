@@ -13,10 +13,8 @@
 ## 📝 Introduce
 
 > **CHAEUDA**
->
 > 시골 빈집의 새로운 주인을 연결하는 플랫폼
-
-편리하게 빈집을 올리고 구매자와 판매자가즉각적으로 소통할 수 있는 빈집 매매 플랫폼
+> 편리하게 빈집을 올리고 구매자와 판매자가즉각적으로 소통할 수 있는 빈집 매매 플랫폼
 
 ## 🧑🏻‍💻 팀 소개 및 역할
 
@@ -90,7 +88,7 @@
 
 ## 라이브 서버
 
-[Chaeuda](https://www.chaeuda.shop/)
+<a href="https://www.chaeuda.shop/" target="_blank" rel="noopener noreferrer">채우다 | Chaeuda</a>
 <br />
 
 **테스트 아이디 / 비밀번호**
@@ -168,10 +166,10 @@
 
 ### 작업 문서
 
-1️⃣ [**사용자 요구사항 정의서**](https://docs.google.com/spreadsheets/d/1nRIeptNMT0AYOf6ARkmHL6xk2VdSp4jgcNb6zxTgII8/edit?usp=sharing)  
+1️⃣ <a href="https://docs.google.com/spreadsheets/d/1nRIeptNMT0AYOf6ARkmHL6xk2VdSp4jgcNb6zxTgII8/edit?usp=sharing" target="_blank" rel="noopener noreferrer">사용자 요구사항 정의서</a>
     - 플랫폼 주요 기능 및 요구사항 정리  
 
-2️⃣ [**화면 정의서**](https://docs.google.com/spreadsheets/d/1QScaExEtDA1yrc9YtnAF5Lkzxem07lAISy-i9X-XUco/edit?usp=sharing)  
+2️⃣ <a href="https://docs.google.com/spreadsheets/d/1QScaExEtDA1yrc9YtnAF5Lkzxem07lAISy-i9X-XUco/edit?usp=sharing" target="_blank" rel="noopener noreferrer">화면 정의서</a>
     - 페이지 별 화면 구성 및 UI 설계  
 
 3️⃣ **플로우 차트**  
@@ -186,7 +184,7 @@
 버전과 함께 바로 접근할 수 있도록 링크를 제공합니다.
 
 #### 1️⃣ FE v1.0.0
-🔗 [oz-main-fe-06-team2 (v1.0.0)](https://github.com/chaeuda-TEAM/oz-main-fe-06-team2/releases/tag/v1.0.0)
+<a href="https://github.com/chaeuda-TEAM/oz-main-fe-06-team2/releases/tag/v1.0.0" target="_blank" rel="noopener noreferrer">FE (v1.0.0)</a>
 
 #### 2️⃣ BE v1.0.0
-🔗 [oz-main-be-06-team2 (v1.0.0)](https://github.com/chaeuda-TEAM/oz-main-be-06-team2/releases/tag/v1.0.0)
+<a href="https://github.com/chaeuda-TEAM/oz-main-be-06-team2/releases/tag/v1.0.0" target="_blank" rel="noopener noreferrer">BE (v1.0.0)</a>
