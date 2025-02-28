@@ -49,7 +49,7 @@ const Home = () => {
     };
 
     fetchDecryptedUser();
-  }, [userData]);
+  }, [login, userData]);
 
   const handleCloseModal = () => {
     setIsModalOpen(false);

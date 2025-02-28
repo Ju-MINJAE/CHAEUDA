@@ -26,3 +26,26 @@ export type ChatListProps = {
 export type ChatRoomProps = {
   chatId: number;
 };
+
+export type WebSocketSender = {
+  username: string;
+  [key: string]: unknown;
+};
+
+export type WebSocketMessage = {
+  id?: string | number;
+  message?: string;
+  sender?: WebSocketSender | string;
+  created_at?: string | number;
+  chat_room_id?: string | number;
+  type?: string;
+  prev_messages?: WebSocketPrevMessage[];
+};
+
+export type WebSocketPrevMessage = {
+  id?: string | number;
+  message?: string;
+  sender?: WebSocketSender;
+  created_at?: string | number;
+  chat_room_id?: string | number;
+};

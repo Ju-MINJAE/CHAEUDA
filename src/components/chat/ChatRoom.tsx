@@ -1,8 +1,12 @@
+'use client';
+
 import useAccessToken from '@/hooks/useAccessToken';
-import React, { useEffect, useRef, useState, useCallback, useLayoutEffect } from 'react';
+import type React from 'react';
+import { useEffect, useRef, useState, useCallback, useLayoutEffect } from 'react';
 import { Send } from 'lucide-react';
 import useAuthStore from '@/stores/authStore';
-import { ChatRoomProps, Message } from '@/types/chat';
+import type { ChatRoomProps, Message, WebSocketMessage, WebSocketPrevMessage } from '@/types/chat';
+import { MAX_RECCONECT_ATTEMPTS, MAX_RECONNECT_DELAY } from '@/constants/chat';
 
 const ChatRoom: React.FC<ChatRoomProps> = ({ chatId }) => {
   const socketRef = useRef<WebSocket | null>(null);
@@ -10,10 +14,29 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ chatId }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState<string>('');
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const reconnectAttemptsRef = useRef<number>(0);
+
+  const [reconnectError, setReconnectError] = useState<boolean>(false);
+
   const accessToken = useAccessToken();
   const { user } = useAuthStore();
   const myName = user?.username;
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const getReconnectDelay = useCallback(() => {
+    const attempt = reconnectAttemptsRef.current;
+    const delay = Math.min(MAX_RECONNECT_DELAY, MAX_RECONNECT_DELAY * Math.pow(2, attempt));
+    return delay * (0.8 + Math.random() * 0.4);
+  }, []);
+
+  const resetReconnection = useCallback(() => {
+    reconnectAttemptsRef.current = 0;
+    setReconnectError(false);
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current);
+      reconnectTimeoutRef.current = null;
+    }
+  }, []);
 
   const connect = useCallback(() => {
     if (!accessToken) return;
@@ -24,22 +47,19 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ chatId }) => {
 
     socketRef.current.onopen = () => {
       setIsConnected(true);
-      if (reconnectTimeoutRef.current) {
-        clearTimeout(reconnectTimeoutRef.current);
-        reconnectTimeoutRef.current = null;
-      }
+      resetReconnection();
     };
 
     socketRef.current.onmessage = event => {
       try {
-        const data = JSON.parse(event.data);
+        const data = JSON.parse(event.data) as WebSocketMessage;
         if (data.type === 'connection_established') {
-          const prevMessages = (data.prev_messages || []).map((msg: any) => ({
+          const prevMessages = (data.prev_messages || []).map((msg: WebSocketPrevMessage) => ({
             id: msg.id?.toString() || Date.now().toString(),
             content: msg.message || '',
             sender: msg.sender?.username || 'Unknown',
             createdAt: new Date(msg.created_at || Date.now()),
-            chatRoom: msg.chat_room_id?.toString() || chatId,
+            chatRoom: msg.chat_room_id?.toString() || chatId.toString(),
           }));
 
           prevMessages.sort(
@@ -52,9 +72,10 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ chatId }) => {
             id: data.id?.toString() || Date.now().toString(),
             content: data.message || '',
             sender:
-              (typeof data.sender === 'object' ? data.sender.username : data.sender) || 'Unknown',
+              (typeof data.sender === 'object' ? data.sender.username : (data.sender as string)) ||
+              'Unknown',
             createdAt: new Date(data.created_at || Date.now()),
-            chatRoom: data.chat_room_id?.toString() || chatId,
+            chatRoom: data.chat_room_id?.toString() || chatId.toString(),
           };
           setMessages(prev => {
             const updatedMessages = [...prev, newMessage];
@@ -76,22 +97,40 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ chatId }) => {
 
     socketRef.current.onclose = () => {
       setIsConnected(false);
+
+      if (reconnectAttemptsRef.current >= MAX_RECCONECT_ATTEMPTS) {
+        setReconnectError(true);
+        console.error(`WebSocket reconnection failed after ${MAX_RECCONECT_ATTEMPTS} attempts`);
+        return;
+      }
+
+      reconnectAttemptsRef.current += 1;
+
+      const delay = getReconnectDelay();
+      console.log(
+        `Attempting to reconnect in ${Math.round(delay / 1000)} seconds... (Attempt ${reconnectAttemptsRef.current}/${MAX_RECCONECT_ATTEMPTS})`,
+      );
+
       reconnectTimeoutRef.current = setTimeout(() => {
-        console.log('Attempting to reconnect...');
+        console.log(
+          `Reconnecting... (Attempt ${reconnectAttemptsRef.current}/${MAX_RECCONECT_ATTEMPTS})`,
+        );
         connect();
-      }, 5000);
+      }, delay);
     };
-  }, [accessToken, chatId]);
+  }, [accessToken, chatId, getReconnectDelay, resetReconnection]);
 
   const disconnect = useCallback(() => {
     if (socketRef.current) {
       socketRef.current.close();
     }
-    if (reconnectTimeoutRef.current) {
-      clearTimeout(reconnectTimeoutRef.current);
-      reconnectTimeoutRef.current = null;
-    }
-  }, []);
+    resetReconnection();
+  }, [resetReconnection]);
+
+  const handleManualReconnect = useCallback(() => {
+    resetReconnection();
+    connect();
+  }, [resetReconnection, connect]);
 
   const sendMessage = () => {
     if (
@@ -112,9 +151,20 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ chatId }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }, []);
 
+  const isNearBottom = useCallback(() => {
+    if (!messagesEndRef.current) return false;
+    const container = messagesEndRef.current.parentElement;
+    if (!container) return false;
+
+    return container.scrollHeight - container.scrollTop - container.clientHeight < 100;
+  }, []);
+
   useLayoutEffect(() => {
-    scrollToBottom();
-  }, [messages, scrollToBottom]);
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage?.sender === myName || isNearBottom()) {
+      scrollToBottom();
+    }
+  }, [messages, scrollToBottom, myName, isNearBottom]);
 
   useEffect(() => {
     connect();
@@ -131,6 +181,18 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ chatId }) => {
 
   return (
     <div className="flex flex-col h-full bg-white">
+      {reconnectError && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+          <strong className="font-bold">연결 오류!</strong>
+          <span className="block sm:inline"> 서버에 연결할 수 없습니다.</span>
+          <button
+            onClick={handleManualReconnect}
+            className="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-xs"
+          >
+            재연결
+          </button>
+        </div>
+      )}
       <div className="flex-1 overflow-y-auto px-2 py-4 space-y-4">
         {messages.map(message => (
           <div
